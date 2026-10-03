@@ -179,8 +179,10 @@ async function main() {
   let head = '';
   try {
     head = execFileSync('git', ['-C', root, 'rev-parse', '--short', 'HEAD'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
-    const dirty = execFileSync('git', ['-C', root, 'status', '--porcelain', '--untracked-files=no'], { encoding: 'utf8' }).trim();
-    if (dirty) head += ' with uncommitted changes';
+    const rel = path.relative(root, dir);
+    const dirty = execFileSync('git', ['-C', root, 'status', '--porcelain', '--untracked-files=no'], { encoding: 'utf8' })
+      .split('\n').map((l) => l.slice(3)).filter((f) => f && !f.startsWith(rel));
+    if (dirty.length) head += `; uncommitted: ${dirty.join(', ')}`;
   } catch { /* not a repo */ }
   if (!only) {
     fs.writeFileSync(path.join(dir, 'captured.txt'),

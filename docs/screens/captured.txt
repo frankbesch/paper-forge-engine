@@ -1,4 +1,4 @@
 Captured by capture.mjs from capture.json at 340 CSS px, scale 2.
-Chrome/154.0.8037.93, repo at 6240f14 with uncommitted changes.
+Chrome/154.0.8037.93, repo at be2c574.
 
 console-reader.png: 680x1386 px, 122 KB, smallest text 11.04 CSS px, light, library.html#item/2026-writing-evaluation-cases-that-catch-regressions
