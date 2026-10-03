@@ -27,6 +27,13 @@ real titles or notes.
 
 ## How it works
 
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/lifecycle-dark.svg"/><img width="400" align="top" src="docs/diagrams/lifecycle-light.svg" alt="Diagram: one source from capture to the built console, in seven steps. Text version below."/></picture> <picture><source media="(prefers-color-scheme: dark)" srcset="docs/screens/console-reader.png"/><img width="400" align="top" src="docs/screens/console-reader.png" alt="Screenshot: the console's workbook reader at phone width, showing one sample item's stages, evidence class, next action, and pending assessment. Text version below."/></picture></p>
+
+The screenshot is the sample library's console at phone width: item 03's
+workbook reader, with its stage tabs, evidence class, next action, and an
+intake assessment still pending. The console has no dark mode, so it shows
+the same capture in both themes. The steps, as text:
+
 - **Capture** (`pf.py capture`) preserves a source under
   `papers/<slug>/source/`, records its SHA-256, and copies the workbook
   templates from `templates/paper/`.

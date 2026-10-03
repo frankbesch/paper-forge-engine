@@ -723,6 +723,10 @@
       .ledger-fields { grid-template-columns: 1fr; }
       .ledger-field, .ledger-field:nth-child(odd), .ledger-field:last-child, .ledger-field:nth-last-child(2):nth-child(odd) { border-right: 0; border-bottom: 1px solid var(--line); }
       .ledger-field:last-child { border-bottom: 0; }
+      /* Phone text floor: no label under 11 px (.69rem), so a phone reads every line. */
+      .queue-command, .library-table th, .topic-chip, .status-label, .map-stage::before, .map-node-number,
+      .theme, .related-heading, .badge, .reader-brand, .doc-tab small, .ledger-index, .ledger-field dt,
+      .doc-callout .callout-label { font-size: .69rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {

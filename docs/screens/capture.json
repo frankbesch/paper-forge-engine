@@ -1,0 +1,8 @@
+{
+  "note": "Build the sample console first: python3 scripts/build_library.py --root tests/fixtures/library --output library.html --as-of 2026-10-03. Then: node docs/screens/capture.mjs docs/screens/capture.json. The console has no dark mode, so the README's dark source is the same capture.",
+  "root": "../..",
+  "shots": [
+    {"out": "console-reader.png", "url": "library.html#item/2026-writing-evaluation-cases-that-catch-regressions",
+     "scheme": "light", "height_from": "../diagrams/lifecycle-light.svg"}
+  ]
+}
