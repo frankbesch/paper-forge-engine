@@ -1,0 +1,7 @@
+{
+  "targets": {
+    "notes": "~/notes",
+    "projects": "~/projects"
+  },
+  "note": "Copy to config/local.json (untracked). Receipts store target keys and repository-relative paths only; this file resolves keys to roots on one machine."
+}

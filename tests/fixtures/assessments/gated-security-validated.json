@@ -1,0 +1,61 @@
+{
+  "assessment_version": 1,
+  "item_id": "PF-0001",
+  "status": "assessed",
+  "assessed_at": "2026-09-04",
+  "assessor": "Alex",
+  "disposition": {
+    "value": "Test",
+    "rationale": "Plausible value; bounded test first."
+  },
+  "general": {
+    "evidence_quality": {
+      "score": 2,
+      "rationale": "Fixture rationale for evidence_quality."
+    },
+    "novelty": {
+      "score": 3,
+      "rationale": "Fixture rationale for novelty."
+    },
+    "actionability": {
+      "score": 3,
+      "rationale": "Fixture rationale for actionability."
+    },
+    "durability": {
+      "score": 3,
+      "rationale": "Fixture rationale for durability."
+    },
+    "implementation_effort": {
+      "score": 2,
+      "rationale": "Fixture rationale for implementation_effort."
+    },
+    "downside_risk": {
+      "score": 1,
+      "rationale": "Fixture rationale for downside_risk."
+    },
+    "urgency": {
+      "score": 1,
+      "rationale": "Fixture rationale for urgency."
+    }
+  },
+  "endeavors": {
+    "projects": {
+      "relevance": 4,
+      "expected_leverage": 3,
+      "confidence": "medium",
+      "use_case": "Package a reusable procedure.",
+      "suggested_next_action": "Compare one workflow.",
+      "owner": "projects"
+    }
+  },
+  "safety_flags": [
+    "security"
+  ],
+  "freshness": {
+    "as_of": "2026-09-04",
+    "review_by": "2027-03-04"
+  },
+  "application_state": "validated",
+  "revision": 1,
+  "history": []
+}

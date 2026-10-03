@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "approved_on": "2026-10-03",
+  "approved_by": "Alex",
+  "work_type_to_evidence_class": {
+    "blog post": "anecdote or opinion",
+    "empirical study": "empirical study",
+    "literature review": "systematic synthesis",
+    "conceptual": "conceptual argument",
+    "practitioner guide": "practitioner guidance",
+    "technical documentation": "technical documentation",
+    "software repository": "software artifact",
+    "course material": "training material",
+    "framework": "framework or method",
+    "case study": "practitioner guidance",
+    "screenshot": "screenshot or fragment",
+    "social post": "unverified claim",
+    "unknown": "unknown",
+    "note": "anecdote or opinion",
+    "quotation": "anecdote or opinion",
+    "practitioner_guide": "practitioner guidance"
+  }
+}

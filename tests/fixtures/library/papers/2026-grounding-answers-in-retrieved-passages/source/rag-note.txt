@@ -1,0 +1,1 @@
+A synthetic note about retrieval-augmented generation. It claims that grounding answers in retrieved passages reduces unsupported statements, and it describes a small evaluation with 40 questions.

@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "item_id": "PF-0003",
+  "slug": "2026-writing-evaluation-cases-that-catch-regressions",
+  "kind": "article",
+  "work_type": "practitioner guide",
+  "evidence_class": "practitioner guidance",
+  "identity": {
+    "title": "Writing evaluation cases that catch regressions",
+    "authors": [
+      "Practitioner Example"
+    ],
+    "year": 2026,
+    "published": null,
+    "language": "en"
+  },
+  "sources": [
+    {
+      "source_id": "S1",
+      "role": "primary",
+      "canonical_url": null,
+      "source_file": "source/eval-guide.md",
+      "media_type": "text/markdown",
+      "sha256": "dcdcd3dbe9b8d157df9679213c39f42a524b4c8131ff68b6cf7f6b613b596d6f",
+      "bytes": 134,
+      "retrieved": "2026-10-03",
+      "version": null,
+      "commit": null,
+      "access_scope": null,
+      "extraction": {
+        "status": "complete",
+        "method": "verbatim-text",
+        "characters": 134,
+        "caveat": "Line anchors refer to the preserved text source. Code is preserved, never executed.",
+        "artifact": "work/extracted.txt",
+        "receipt": "work/extraction.json"
+      }
+    }
+  ],
+  "route": {
+    "name": "critique",
+    "purpose": "Preserve provenance and create a trustworthy route-ready record.",
+    "selected": [
+      "read",
+      "understand",
+      "analyze"
+    ],
+    "skipped": [
+      "reproduce",
+      "experiment",
+      "extend",
+      "discover"
+    ],
+    "reason": "Only the smallest route needed for the current purpose is selected.",
+    "reopening_trigger": "Reopen when a concrete learning, decision, verification, or development need depends on this source."
+  },
+  "learning": {
+    "schema_version": 1,
+    "feynman": {
+      "status": "not_requested",
+      "mode": null,
+      "requested_at": null,
+      "paused_at": null,
+      "reason": "Optional exercise not requested.",
+      "history": []
+    }
+  },
+  "artifacts": {
+    "overview": "README.md",
+    "stages": {
+      "read": "work/01-read.md",
+      "understand": "work/02-understand.md",
+      "analyze": "work/03-analyze.md",
+      "reproduce": "work/04-reproduce.md",
+      "experiment": "work/05-experiment.md",
+      "extend": "work/06-extend.md",
+      "discover": "work/07-discover.md"
+    },
+    "extracted_text": "work/extracted.txt",
+    "extraction_receipt": "work/extraction.json"
+  },
+  "relations": [],
+  "topics": [
+    "Unclassified"
+  ],
+  "captured_via": "manual",
+  "provenance_status": "verified",
+  "state": {
+    "lifecycle": "active",
+    "current_stage": "read",
+    "next_action": "Complete the selected route's current stage exit gate.",
+    "blocker": null
+  },
+  "title": "Writing evaluation cases that catch regressions",
+  "authors": [
+    "Practitioner Example"
+  ],
+  "year": 2026,
+  "published": null,
+  "retrieved": "2026-10-03",
+  "source_type": "text/markdown",
+  "paper_type": "practitioner guide",
+  "canonical_url": null,
+  "source_file": "source/eval-guide.md",
+  "source_sha256": "dcdcd3dbe9b8d157df9679213c39f42a524b4c8131ff68b6cf7f6b613b596d6f",
+  "access_scope": null
+}

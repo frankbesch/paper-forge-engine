@@ -1,0 +1,8 @@
+# A library's own data, when this repository is used as the library root.
+/papers/
+/ledger/
+/library.html
+/ACTIVE.md
+/config/local.json
+__pycache__/
+.DS_Store

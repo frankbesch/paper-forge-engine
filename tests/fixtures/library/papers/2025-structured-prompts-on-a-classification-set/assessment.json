@@ -1,0 +1,66 @@
+{
+  "assessment_version": 2,
+  "item_id": "PF-0002",
+  "status": "pending",
+  "assessed_at": "2026-10-03",
+  "assessor": "capture (no assessor)",
+  "disposition": {
+    "value": null,
+    "rationale": null
+  },
+  "general": {
+    "evidence_quality": {
+      "score": null,
+      "rationale": null
+    },
+    "novelty": {
+      "score": null,
+      "rationale": null
+    },
+    "actionability": {
+      "score": null,
+      "rationale": null
+    },
+    "durability": {
+      "score": null,
+      "rationale": null
+    },
+    "implementation_effort": {
+      "score": null,
+      "rationale": null
+    },
+    "downside_risk": {
+      "score": null,
+      "rationale": null
+    },
+    "urgency": {
+      "score": null,
+      "rationale": null
+    }
+  },
+  "endeavors": {},
+  "safety_flags": [],
+  "freshness": {
+    "as_of": "2026-10-03",
+    "review_by": null
+  },
+  "application_state": "unassessed",
+  "revision": 1,
+  "history": [],
+  "recommendation": null,
+  "intake": {
+    "idea": null,
+    "support": null,
+    "unknowns": null,
+    "potential_use": null,
+    "effort": null,
+    "risk": null,
+    "next_action": "Read preserved sources; draft assessment with pf.py intake PF-0002 --from <draft.json>.",
+    "confidence": null,
+    "attribution": "partial",
+    "citations": [],
+    "evidence_locations": [],
+    "conflicts": [],
+    "failure": null
+  }
+}

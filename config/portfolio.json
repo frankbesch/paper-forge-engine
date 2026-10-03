@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "review_cadence": {
+    "interval_days": 7
+  },
+  "allowed_export_targets": [
+    "notes",
+    "projects"
+  ],
+  "endeavors": {
+    "notes": {
+      "label": "Notes system",
+      "active": true,
+      "allowed_export_targets": [
+        "notes"
+      ]
+    },
+    "projects": {
+      "label": "Project work",
+      "active": true,
+      "allowed_export_targets": [
+        "projects"
+      ]
+    },
+    "ai-superuser": {
+      "label": "AI superuser capability",
+      "active": true,
+      "allowed_export_targets": [
+        "notes",
+        "projects"
+      ]
+    },
+    "career": {
+      "label": "Career",
+      "active": true,
+      "allowed_export_targets": [
+        "notes"
+      ]
+    },
+    "thinking": {
+      "label": "Thinking and mental models",
+      "active": true,
+      "allowed_export_targets": [
+        "notes"
+      ]
+    }
+  },
+  "approver": "Alex"
+}

@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "item_id": "PF-0001",
+  "slug": "2026-grounding-answers-in-retrieved-passages",
+  "kind": "note",
+  "work_type": "blog post",
+  "evidence_class": "anecdote or opinion",
+  "identity": {
+    "title": "Grounding answers in retrieved passages",
+    "authors": [
+      "Example Author"
+    ],
+    "year": 2026,
+    "published": null,
+    "language": "en"
+  },
+  "sources": [
+    {
+      "source_id": "S1",
+      "role": "primary",
+      "canonical_url": null,
+      "source_file": "source/rag-note.txt",
+      "media_type": "text/plain",
+      "sha256": "194c82a0cd816e0090f9d643f6203a4fd0c2414664c35317f631767122dee225",
+      "bytes": 196,
+      "retrieved": "2026-10-03",
+      "version": null,
+      "commit": null,
+      "access_scope": null,
+      "extraction": {
+        "status": "complete",
+        "method": "verbatim-text",
+        "characters": 196,
+        "caveat": "Line anchors refer to the preserved text source. Code is preserved, never executed.",
+        "artifact": "work/extracted.txt",
+        "receipt": "work/extraction.json"
+      }
+    }
+  ],
+  "route": {
+    "name": "capture",
+    "purpose": "Preserve provenance and create a trustworthy route-ready record.",
+    "selected": [
+      "read"
+    ],
+    "skipped": [
+      "understand",
+      "analyze",
+      "reproduce",
+      "experiment",
+      "extend",
+      "discover"
+    ],
+    "reason": "Only the smallest route needed for the current purpose is selected.",
+    "reopening_trigger": "Reopen when a concrete learning, decision, verification, or development need depends on this source."
+  },
+  "learning": {
+    "schema_version": 1,
+    "feynman": {
+      "status": "not_requested",
+      "mode": null,
+      "requested_at": null,
+      "paused_at": null,
+      "reason": "Optional exercise not requested.",
+      "history": []
+    }
+  },
+  "artifacts": {
+    "overview": "README.md",
+    "stages": {
+      "read": "work/01-read.md",
+      "understand": "work/02-understand.md",
+      "analyze": "work/03-analyze.md",
+      "reproduce": "work/04-reproduce.md",
+      "experiment": "work/05-experiment.md",
+      "extend": "work/06-extend.md",
+      "discover": "work/07-discover.md"
+    },
+    "extracted_text": "work/extracted.txt",
+    "extraction_receipt": "work/extraction.json"
+  },
+  "relations": [],
+  "topics": [
+    "Unclassified"
+  ],
+  "captured_via": "manual",
+  "provenance_status": "verified",
+  "state": {
+    "lifecycle": "active",
+    "current_stage": "read",
+    "next_action": "Complete the selected route's current stage exit gate.",
+    "blocker": null
+  },
+  "title": "Grounding answers in retrieved passages",
+  "authors": [
+    "Example Author"
+  ],
+  "year": 2026,
+  "published": null,
+  "retrieved": "2026-10-03",
+  "source_type": "text/plain",
+  "paper_type": "blog post",
+  "canonical_url": null,
+  "source_file": "source/rag-note.txt",
+  "source_sha256": "194c82a0cd816e0090f9d643f6203a4fd0c2414664c35317f631767122dee225",
+  "access_scope": null
+}

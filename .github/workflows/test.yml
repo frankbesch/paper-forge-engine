@@ -1,0 +1,25 @@
+name: Test
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: python3 -m unittest discover -s tests
+      - name: Sample library validates and builds
+        run: |
+          python3 scripts/pf.py --root tests/fixtures/library validate
+          python3 scripts/validate_v2.py --root tests/fixtures/library
+          python3 scripts/build_library.py --root tests/fixtures/library --output /tmp/library.html

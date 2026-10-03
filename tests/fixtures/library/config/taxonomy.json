@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "topics": [
+    "Agents & architecture",
+    "Capability & limits",
+    "Adoption & change",
+    "Reusable context",
+    "Creative work",
+    "Rejected source",
+    "Unclassified"
+  ],
+  "topic_rules": {
+    "Unclassified": "Review-queue marker. Never implies similarity between items and never links them in the map."
+  },
+  "evidence_classes": [
+    "empirical study",
+    "systematic synthesis",
+    "conceptual argument",
+    "practitioner guidance",
+    "technical documentation",
+    "software artifact",
+    "training material",
+    "framework or method",
+    "anecdote or opinion",
+    "screenshot or fragment",
+    "unverified claim",
+    "rejected source",
+    "unknown"
+  ]
+}

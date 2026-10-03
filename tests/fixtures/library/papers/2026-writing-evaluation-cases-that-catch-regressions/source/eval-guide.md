@@ -1,0 +1,1 @@
+A synthetic practitioner guide on writing evaluation cases: state the input, the expected property, and the failure it guards against.

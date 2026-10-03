@@ -1,0 +1,1549 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <script>(()=>{const t=new URLSearchParams(location.search).get("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;})();</script>
+  <title>Paper Forge Console</title>
+  <meta name="paper-forge-as-of" content="__PAPER_FORGE_AS_OF__">
+  <style>
+    __PAPER_FORGE_QUOIN_CSS__
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 86% 8%, var(--ember-ring), transparent 24rem),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+        var(--paper);
+      background-size: auto, 42px 42px, auto;
+      font-family: var(--sans);
+      min-height: 100vh;
+    }
+
+    button, input, select { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    a { color: var(--green); }
+
+    .shell { width: min(1420px, calc(100% - 40px)); margin: 0 auto; }
+
+    .masthead {
+      padding: 52px 0 30px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(280px, .7fr);
+      gap: 48px;
+      align-items: end;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ember-dark);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 3px;
+      border-radius: 99px;
+      background: var(--ember);
+    }
+
+    h1, h2, h3 {
+      font-family: var(--sans);
+      font-weight: 600;
+      letter-spacing: -.025em;
+    }
+
+    h1 {
+      max-width: 860px;
+      margin: 14px 0 12px;
+      font-size: clamp(3.2rem, 7vw, 6.8rem);
+      line-height: .88;
+    }
+
+    .charter {
+      margin: 0;
+      max-width: 730px;
+      color: var(--ink-soft);
+      font-family: var(--sans);
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      line-height: 1.55;
+    }
+
+    .loop-note {
+      border-left: 3px solid var(--ember);
+      padding-left: 20px;
+      color: var(--ink-soft);
+      font-size: .88rem;
+      line-height: 1.55;
+    }
+
+    .loop-note strong { display: block; color: var(--ink); margin-bottom: 4px; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-top: 26px;
+    }
+
+    .stat { background: var(--glass); padding: 16px; }
+    .stat b { display: block; font-size: 1.35rem; }
+    .stat span { color: var(--ink-soft); font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; }
+
+    .workspace-nav {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      padding: 18px 0 0;
+      overflow-x: auto;
+    }
+
+    .workspace-nav button {
+      flex: 0 0 auto;
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0 15px;
+      color: var(--ink-soft);
+      background: var(--glass);
+      cursor: pointer;
+      font-size: .78rem;
+      font-weight: 760;
+    }
+
+    .workspace-nav button[aria-current="page"] { color: var(--paper); border-color: var(--ink); background: var(--ink); }
+    .nav-divider { flex: 0 0 1px; width: 1px; height: 28px; margin: 0 3px; background: var(--line); }
+    #endeavor-nav { display: contents; }
+
+    .controls {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+      align-items: center;
+      padding: 18px 0;
+      background: color-mix(in srgb, var(--paper) 91%, transparent);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+    }
+    .controls > * { min-width: 0; }
+
+    .toolbar-view { grid-column: 1; grid-row: 1; }
+    .toolbar-search { grid-column: 2 / span 4; grid-row: 1; }
+    .filter-sort { grid-column: 6; grid-row: 1; }
+    .filter-grid { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 9px; }
+    .column-toggles { grid-column: 1 / -1; display: flex; gap: 14px; flex-wrap: wrap; color: var(--ink-soft); font-size: .72rem; }
+    .column-toggles label { display: inline-flex; gap: 6px; align-items: center; }
+
+    .search-wrap { position: relative; }
+    .search-wrap svg { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--ink-soft); }
+
+    .search, select {
+      width: 100%;
+      height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--ink);
+      background: var(--glass);
+      outline: none;
+    }
+
+    .search { padding: 0 48px 0 44px; }
+    .search:focus, select:focus { border-color: var(--green); box-shadow: 0 0 0 3px var(--focus-ring); }
+    .shortcut { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--ink-soft); font-size: .72rem; }
+    select { width: 100%; min-width: 0; padding: 0 36px 0 14px; cursor: pointer; }
+
+    .view-switch {
+      height: 46px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--glass);
+    }
+
+    .view-switch button {
+      height: 36px;
+      border: 0;
+      border-radius: 8px;
+      padding: 0 12px;
+      color: var(--ink-soft);
+      background: transparent;
+      cursor: pointer;
+      font-size: .76rem;
+      font-weight: 750;
+    }
+
+    .view-switch button[aria-pressed="true"] { color: var(--paper); background: var(--ink); }
+
+    .results-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: baseline;
+      padding: 28px 0 16px;
+    }
+
+    .results-meta h2 { margin: 0; font-size: 1.8rem; }
+    .results-meta p { margin: 0; color: var(--ink-soft); font-size: .86rem; }
+    .results-actions { display: flex; gap: 12px; align-items: center; }
+    .reset-filters { min-height: 36px; border: 1px solid var(--line); border-radius: 9px; padding: 0 12px; color: var(--ink-soft); background: var(--glass); cursor: pointer; font-weight: 700; }
+    .reset-filters:hover { border-color: var(--green); color: var(--green); background: var(--green-soft); }
+
+    :focus-visible { outline: 3px solid var(--ember-ring); outline-offset: 2px; }
+
+    .home { display: grid; gap: 22px; padding: 34px 0 72px; }
+    .home-intro { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(260px, .65fr); gap: 18px; }
+    .home-card { padding: 24px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--glass); }
+    .home-card h2, .home-card h3 { margin: 0 0 8px; }
+    .home-card p { margin: 0; color: var(--ink-soft); line-height: 1.55; }
+    .attention-card { background: var(--ink); color: var(--paper); }
+    .attention-card p { color: var(--on-ink-soft); }
+    .attention-card .action { margin-top: 18px; border-color: var(--ember); color: var(--paper); background: var(--ember-dark); }
+    .attention-card .action:hover { background: var(--ember); }
+    .attention-count { display: block; margin-bottom: 5px; color: var(--signature); font: 700 2.7rem/1 var(--sans); }
+    .queue-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .endeavor-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .figure-strip { padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--glass); }
+    .figure-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .figure-grid .qc-fig { min-width: 0; margin: 0; }
+    .figure-grid svg { width: 100%; height: auto; }
+    .queue-card { min-width: 0; padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--glass); }
+    .queue-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-bottom: 10px; }
+    .queue-head h3 { margin: 0; font-size: 1.3rem; }
+    .queue-head span { color: var(--ink-soft); font-size: .72rem; }
+    .queue-list { display: grid; gap: 7px; }
+    .queue-row { width: 100%; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; align-items: center; border: 0; border-top: 1px solid var(--line); padding: 11px 0 4px; color: var(--ink); background: transparent; cursor: pointer; text-align: left; }
+    .queue-row span:first-child { min-width: 0; }
+    .queue-row small { display: block; margin-top: 4px; color: var(--ink-soft); font-weight: 500; line-height: 1.35; }
+    .queue-row b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .84rem; }
+    .queue-row span { color: var(--ink-soft); font-size: .72rem; }
+    .queue-row:hover b { color: var(--ember-dark); }
+    .queue-open { min-width: 0; border: 0; padding: 0; color: inherit; background: transparent; cursor: pointer; text-align: left; }
+    .queue-command { display: inline-block; margin-top: 5px; padding: 3px 6px; border-radius: 5px; color: var(--green); background: var(--green-soft); font-size: .66rem; user-select: all; }
+    .queue-empty { padding: 18px 0; color: var(--ink-soft); font-size: .8rem; }
+    .debt-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--line); }
+    .debt-item { border: 0; padding: 15px; color: var(--ink); background: var(--paper-deep); cursor: pointer; text-align: left; }
+    .debt-item b { display: block; font-size: 1.3rem; }
+    .debt-item span { color: var(--ink-soft); font-size: .69rem; letter-spacing: .06em; text-transform: uppercase; }
+
+    .table-wrap { overflow-x: auto; padding-bottom: 72px; }
+    .library-table { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--glass); }
+    .library-table th { padding: 11px 12px; color: var(--ink-soft); background: var(--paper-deep); font-size: .67rem; letter-spacing: .07em; text-align: left; text-transform: uppercase; }
+    .library-table td { overflow-wrap: anywhere; padding: 12px; border-top: 1px solid var(--line); vertical-align: top; font-size: .78rem; }
+    .library-table td:first-child { white-space: nowrap; }
+    .library-table tbody tr { cursor: pointer; }
+    .library-table tbody tr:hover { background: var(--glass-strong); }
+    .library-table tbody tr:focus-visible { outline-offset: -3px; }
+    .table-title { display: -webkit-box; max-width: 42ch; margin-bottom: 4px; overflow: hidden; font: 650 1rem/1.2 var(--sans); -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+    .table-sub { display: block; overflow: hidden; color: var(--ink-soft); font-size: .69rem; text-overflow: ellipsis; white-space: nowrap; }
+    .next-cell { min-width: 240px; max-width: 38ch; color: var(--ink-soft); line-height: 1.4; }
+    .next-preview { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+    .topic-chip { display: inline-flex; margin: 0 4px 4px 0; padding: 3px 7px; border-radius: 999px; color: var(--green); background: var(--green-soft); font-size: .65rem; }
+    .status-label { display: inline-flex; padding: 4px 7px; border-radius: 7px; color: var(--governance); background: var(--gold-soft); font-size: .65rem; font-weight: 750; text-transform: uppercase; }
+    .status-label.rejected-source, .status-label.failed { color: var(--ember-dark); background: var(--risk-bg); }
+    .optional-column[hidden] { display: none !important; }
+
+    [hidden] { display: none !important; }
+
+    .explore { padding-bottom: 72px; }
+
+    .path-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .path-button {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: var(--ink-soft);
+      background: var(--glass);
+      cursor: pointer;
+      font-size: .75rem;
+      font-weight: 720;
+    }
+
+    .path-button:hover, .path-button.active { border-color: var(--green); color: var(--green); background: var(--green-soft); }
+
+    .explore-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 310px;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .map-stage {
+      position: relative;
+      min-height: 610px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 50% 48%, var(--focus-ring), transparent 42%),
+        var(--glass);
+    }
+
+    .map-stage::before {
+      content: "focused neighborhood · explicit relations first, shared topics second";
+      position: absolute;
+      left: 18px;
+      top: 16px;
+      z-index: 2;
+      color: var(--ink-soft);
+      font-size: .65rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .map-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .map-edge { stroke: var(--line); stroke-width: 1.5; opacity: .48; }
+    .map-edge.active { stroke: var(--ember); stroke-width: 4; opacity: .9; }
+    .map-edge.related { stroke: var(--green); stroke-width: 2.5; opacity: .72; }
+
+    .map-node {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      z-index: 2;
+      width: 144px;
+      min-height: 82px;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 5px;
+      border: 1px solid var(--line-strong);
+      border-radius: 14px;
+      padding: 11px 12px;
+      color: var(--ink);
+      background: var(--card);
+      box-shadow: var(--shadow-soft);
+      cursor: pointer;
+      text-align: left;
+      transition: transform .16s ease, opacity .16s ease, border-color .16s ease;
+    }
+
+    .map-node:hover, .map-node.selected { transform: translate(-50%, -50%) scale(1.045); border-color: var(--ember); }
+    .map-node.related { border-color: var(--green); }
+    .map-node.dim { opacity: .38; }
+    .map-node.path { box-shadow: 0 0 0 3px var(--ember-ring), var(--shadow-soft); }
+    .map-node-number { color: var(--ember-dark); font-size: .66rem; font-weight: 850; letter-spacing: .1em; }
+    .map-node-title { font-family: var(--sans); font-size: .9rem; font-weight: 650; line-height: 1.08; }
+
+    .map-detail {
+      min-height: 610px;
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper-deep);
+    }
+
+    .map-detail .number { margin-bottom: 18px; }
+    .map-detail h3 { margin: 0 0 8px; font-size: 1.7rem; line-height: 1.08; }
+    .map-detail .summary { margin-top: 18px; -webkit-line-clamp: 8; }
+    .theme-list { display: flex; gap: 6px; flex-wrap: wrap; margin: 14px 0 0; }
+    .theme { padding: 4px 8px; border: 1px solid var(--line-strong); border-radius: 999px; color: var(--ink-soft); font-size: .67rem; }
+    .related-heading { margin: auto 0 9px; padding-top: 24px; color: var(--ink-soft); font-size: .68rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .related-list { display: grid; gap: 5px; }
+    .related-link { border: 0; border-left: 2px solid var(--line); padding: 6px 9px; color: var(--ink-soft); background: transparent; cursor: pointer; text-align: left; font-size: .76rem; }
+    .related-link:hover { border-color: var(--ember); color: var(--ink); }
+    .map-open { margin-top: 18px; }
+    .map-legend { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 12px; color: var(--ink-soft); font-size: .7rem; }
+    .map-legend b { color: var(--ink); }
+    .map-legend i { display: inline-block; width: 20px; height: 2px; margin: 0 5px 3px 0; background: var(--green); }
+    .map-legend i.direct { height: 3px; background: var(--ember); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      padding-bottom: 72px;
+    }
+
+    .card {
+      position: relative;
+      min-height: 330px;
+      display: flex;
+      flex-direction: column;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--glass);
+      box-shadow: 0 2px 0 var(--glass-edge) inset;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+      overflow: hidden;
+    }
+
+    .card::after {
+      content: attr(data-number);
+      position: absolute;
+      right: -6px;
+      bottom: -30px;
+      color: var(--watermark);
+      font-family: var(--sans);
+      font-size: 9rem;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .card:hover { transform: translateY(-3px); border-color: var(--line-strong); box-shadow: var(--shadow); }
+
+    .card-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .number { color: var(--ember-dark); font-weight: 800; font-size: .75rem; letter-spacing: .1em; }
+    .badges { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: var(--ai);
+      font-size: .68rem;
+      font-weight: 750;
+      letter-spacing: .035em;
+      text-transform: uppercase;
+    }
+
+    .badge.critique { background: var(--green-soft); color: var(--green); }
+    .badge.capture { background: var(--gold-soft); color: var(--governance); }
+    .badge.limited-access { background: var(--risk-bg); color: var(--ember-dark); }
+    .badge.failed, .badge.rejected-source { background: var(--risk-bg); color: var(--ember-dark); }
+    .badge.unassessed { background: var(--tint); color: var(--ink-soft); }
+    .badge.blocked, .status-label.blocked { background: var(--risk-bg); color: var(--ember-dark); }
+    .assessment-panels { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin: 0 0 18px; }
+    .panel { border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; background: var(--glass); }
+    .panel h3 { margin: 0 0 6px; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+    .panel p { margin: 4px 0; font-size: .86rem; line-height: 1.45; }
+    .panel .panel-meta { color: var(--ink-soft); font-size: .76rem; }
+    .score-grid { display: grid; gap: 6px; margin: 8px 0 0; padding: 0; list-style: none; }
+    .score-grid li { display: grid; grid-template-columns: 1fr 2.6rem; gap: 2px 8px; font-size: .8rem; align-items: baseline; padding-bottom: 4px; border-bottom: 1px dashed var(--line); }
+    .score-grid li > span:last-child { grid-column: 1 / -1; color: var(--ink-soft); font-size: .76rem; line-height: 1.4; }
+    .score-grid b { font-variant-numeric: tabular-nums; }
+    .score-grid .null { color: var(--ink-soft); }
+    .panel .block-reason { color: var(--ember-dark); font-weight: 600; }
+    .panel code { font-size: .78rem; }
+
+    .card h3 { margin: 24px 0 7px; font-size: 1.48rem; line-height: 1.12; }
+    .byline { margin: 0 0 16px; color: var(--ink-soft); font-size: .82rem; }
+    .summary { margin: 0; color: var(--ink-soft); font-size: .87rem; line-height: 1.55; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; overflow: hidden; }
+
+    .card-footer { margin-top: auto; padding-top: 20px; position: relative; z-index: 1; }
+    .stage-line { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 14px; }
+    .stage-dot { height: 5px; border-radius: 999px; background: var(--line); }
+    .stage-dot.complete { background: var(--green); }
+    .stage-dot.in_progress { background: var(--ember); }
+    .stage-dot.blocked { background: var(--risk); }
+    .stage-dot.skipped { background: repeating-linear-gradient(135deg, var(--line) 0 2px, transparent 2px 4px); }
+
+    .open-card {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 0;
+      border-top: 1px solid var(--line);
+      padding: 14px 0 0;
+      background: transparent;
+      color: var(--ink);
+      font-weight: 760;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .open-card span:last-child { color: var(--ember); font-size: 1.1rem; transition: transform .18s ease; }
+    .open-card:hover span:last-child { transform: translateX(4px); }
+
+    .empty {
+      display: none;
+      text-align: center;
+      padding: 90px 20px;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+      color: var(--ink-soft);
+      grid-column: 1 / -1;
+    }
+
+    dialog {
+      width: min(1240px, calc(100% - 32px));
+      height: min(900px, calc(100% - 32px));
+      padding: 0;
+      border: 1px solid var(--line-strong);
+      border-radius: 22px;
+      color: var(--ink);
+      background: var(--paper);
+      box-shadow: var(--shadow-dialog);
+      overflow: hidden;
+    }
+
+    dialog::backdrop { background: var(--backdrop); backdrop-filter: blur(5px); }
+    .reader { height: 100%; display: grid; grid-template-columns: 250px minmax(0, 1fr); }
+
+    .reader-nav {
+      display: flex;
+      flex-direction: column;
+      padding: 28px 18px 20px;
+      border-right: 1px solid var(--line);
+      background: var(--paper-deep);
+      overflow-y: auto;
+    }
+
+    .reader-brand { padding: 0 10px 22px; color: var(--ember-dark); font-size: .68rem; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+    .doc-tabs { display: grid; gap: 5px; }
+
+    .doc-tab {
+      display: grid;
+      grid-template-columns: 10px 1fr;
+      gap: 9px;
+      align-items: center;
+      width: 100%;
+      min-height: 42px;
+      border: 0;
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: transparent;
+      color: var(--ink-soft);
+      cursor: pointer;
+      text-align: left;
+      font-size: .82rem;
+    }
+
+    .doc-tab:hover { background: var(--glass); color: var(--ink); }
+    .doc-tab.active { background: var(--ink); color: var(--paper); }
+    .doc-tab .status-mark { width: 7px; height: 7px; border-radius: 50%; background: var(--line-strong); }
+    .doc-tab .status-mark.complete { background: var(--strategy); }
+    .doc-tab .status-mark.in_progress { background: var(--signature); }
+    .doc-tab .status-mark.skipped { border: 1px solid currentColor; background: transparent; }
+    .doc-tab .status-mark.reference { background: var(--ember); }
+    .doc-tab small { display: block; margin-top: 2px; color: inherit; opacity: .68; font-size: .59rem; letter-spacing: .045em; text-transform: uppercase; }
+
+    .nav-key { margin-top: auto; padding: 24px 10px 0; color: var(--ink-soft); font-size: .69rem; line-height: 1.55; }
+    .nav-key span { display: inline-flex; align-items: center; gap: 5px; margin-right: 8px; }
+
+    .reader-main { min-width: 0; height: 100%; overflow-y: auto; }
+    .reader-head {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 22px;
+      padding: 24px 34px 20px;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--paper) 92%, transparent);
+      backdrop-filter: blur(14px);
+    }
+
+    .reader-kicker { margin-bottom: 5px; color: var(--ember-dark); font-size: .69rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .reader-title { margin: 0; font-family: var(--sans); font-size: clamp(1.45rem, 3vw, 2.35rem); line-height: 1.05; }
+    .reader-byline { margin-top: 6px; color: var(--ink-soft); font-size: .79rem; }
+    .reader-actions { display: flex; gap: 8px; align-items: flex-start; }
+
+    .action {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0 12px;
+      color: var(--ink);
+      background: var(--glass);
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: 720;
+      font-size: .76rem;
+    }
+
+    .action:hover { border-color: var(--line-strong); background: var(--card); }
+    .action.close { width: 38px; padding: 0; font-size: 1.15rem; }
+
+    .reader-context {
+      display: grid;
+      grid-template-columns: .9fr 1.35fr 1fr;
+      gap: 14px;
+      padding: 20px 34px 0;
+    }
+
+    .context-card { padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--glass); }
+    .context-card b { display: block; margin-bottom: 5px; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; }
+    .context-card p { margin: 0; color: var(--ink-soft); font-size: .78rem; line-height: 1.45; }
+    .reader-related { display: flex; gap: 5px; flex-wrap: wrap; }
+    .reader-related button { border: 0; border-bottom: 1px solid var(--line); padding: 3px 0; color: var(--green); background: transparent; cursor: pointer; text-align: left; font-size: .72rem; }
+
+    .document { max-width: 980px; margin: 0 auto; padding: 38px 46px 90px; font-family: var(--sans); font-size: 1.06rem; line-height: 1.72; }
+    .document h1 { max-width: 22ch; margin: 0 0 12px; font-size: clamp(2.2rem, 5vw, 4rem); line-height: 1; }
+    .document h2 { margin: 2.2em 0 .65em; padding-top: .5em; border-top: 1px solid var(--line); font-size: 1.65rem; }
+    .document h3 { margin: 1.8em 0 .5em; font-size: 1.25rem; }
+    .document > p { max-width: 72ch; }
+    .document p { margin: 0 0 1.05em; }
+    .document ul, .document ol { max-width: 72ch; padding-left: 1.25em; }
+    .document li { margin: .38em 0; }
+    .document li::marker { color: var(--ember-dark); font-weight: 700; }
+    .document blockquote { margin: 1.5em 0; padding: 2px 0 2px 18px; border-left: 3px solid var(--ember); color: var(--ink-soft); }
+    .document code { padding: .13em .34em; border-radius: 4px; background: var(--paper-deep); font: .84em var(--mono); }
+    .document pre { overflow-x: auto; padding: 16px; border-radius: 10px; background: var(--ink); color: var(--paper); }
+    .document pre code { padding: 0; background: transparent; }
+    .document table { width: 100%; margin: 1.4em 0; border-collapse: collapse; font-family: var(--sans); font-size: .83rem; line-height: 1.5; }
+    .document th, .document td { padding: 9px 10px; border: 1px solid var(--line); vertical-align: top; text-align: left; }
+    .document th { background: var(--paper-deep); }
+    .document tbody tr:nth-child(even) { background: var(--glass); }
+    .document a { text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .document hr { margin: 2em 0; border: 0; border-top: 1px solid var(--line); }
+
+    .doc-status {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 2px 0 16px;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      color: var(--green);
+      background: var(--green-soft);
+      font-family: var(--sans);
+      font-size: .72rem;
+    }
+
+    .doc-status span { font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .doc-status strong { font-size: .78rem; }
+    .doc-status time { padding-left: 10px; border-left: 1px solid var(--line); color: var(--ink-soft); }
+
+    .evidence-ledger { display: grid; gap: 14px; margin: 1.5em 0 2.3em; font-family: var(--sans); }
+
+    .ledger-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--glass);
+      box-shadow: 0 1px 0 var(--glass-edge) inset;
+    }
+
+    .ledger-head { display: grid; grid-template-columns: 68px minmax(0, 1fr); gap: 12px; align-items: start; padding: 16px 18px; border-bottom: 1px solid var(--line); background: var(--paper-deep); }
+    .ledger-index { padding-top: 3px; color: var(--ember-dark); font-size: .64rem; font-weight: 850; letter-spacing: .09em; text-transform: uppercase; }
+    .ledger-head h3 { margin: 0; font-family: var(--sans); font-size: 1.17rem; line-height: 1.28; }
+    .ledger-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; }
+    .ledger-field { margin: 0; padding: 14px 18px 15px; border-bottom: 1px solid var(--line); }
+    .ledger-field:nth-child(odd) { border-right: 1px solid var(--line); }
+    .ledger-field:last-child, .ledger-field:nth-last-child(2):nth-child(odd) { border-bottom: 0; }
+    .ledger-field dt { margin: 0 0 6px; color: var(--ink-soft); font-size: .63rem; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+    .ledger-field dd { margin: 0; color: var(--ink-soft); font-family: var(--sans); font-size: .94rem; line-height: 1.53; }
+    .ledger-field.field-confidence dd { color: var(--green); font-family: var(--sans); font-size: .78rem; font-weight: 760; }
+    .ledger-field.field-gap-or-boundary dd, .ledger-field.field-gap dd, .ledger-field.field-boundary dd { color: var(--risk); }
+
+    .doc-callout { max-width: 76ch; margin: 1em 0; padding: 15px 17px; border: 1px solid var(--line); border-left-width: 4px; border-radius: 0 11px 11px 0; background: var(--glass); }
+    .doc-callout .callout-label { margin-bottom: 5px; font-family: var(--sans); font-size: .65rem; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+    .doc-callout p { margin: 0; }
+    .doc-callout.observation { border-left-color: var(--green); }
+    .doc-callout.observation .callout-label { color: var(--green); }
+    .doc-callout.inference { border-left-color: var(--governance); }
+    .doc-callout.inference .callout-label { color: var(--governance); }
+    .doc-callout.speculation { border-left-color: var(--ember); }
+    .doc-callout.speculation .callout-label { color: var(--ember-dark); }
+
+    footer { padding: 24px 0 42px; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: .75rem; line-height: 1.6; }
+
+    @media (max-width: 980px) {
+      .masthead { grid-template-columns: 1fr; gap: 24px; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .reader { grid-template-columns: 190px minmax(0, 1fr); }
+      .reader-context { grid-template-columns: 1fr; }
+      .explore-layout { grid-template-columns: 1fr; }
+      .map-detail { min-height: 0; }
+      .controls { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      .toolbar-view { grid-column: 1; grid-row: 1; }
+      .toolbar-search { grid-column: 2 / span 2; grid-row: 1; }
+      .filter-sort { grid-column: 1; grid-row: 2; }
+      .filter-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 680px) {
+      .shell { width: min(100% - 24px, 1420px); }
+      .masthead { padding-top: 30px; }
+      .masthead > * { min-width: 0; }
+      h1 { font-size: 3.5rem; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stat { min-width: 0; }
+      .controls { grid-template-columns: 1fr 1fr; }
+      .toolbar-view, .toolbar-search, .filter-sort { grid-column: 1 / -1; grid-row: auto; }
+      .filter-grid { grid-template-columns: 1fr 1fr; }
+      select { width: 100%; min-width: 0; }
+      .grid { grid-template-columns: 1fr; }
+      .home-intro, .queue-grid, .endeavor-grid, .figure-grid { grid-template-columns: 1fr; }
+      .debt-strip { grid-template-columns: 1fr 1fr; }
+      .map-stage { min-height: 0; padding: 48px 12px 12px; }
+      #map-nodes { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+      .map-lines { display: none; }
+      .map-node { position: relative; left: auto !important; top: auto !important; width: auto; min-height: 92px; transform: none; }
+      .map-node:hover, .map-node.selected { transform: scale(1.02); }
+      .card { min-height: 300px; }
+      dialog { width: 100%; height: 100%; max-width: none; max-height: none; border: 0; border-radius: 0; }
+      .reader { display: block; overflow: hidden; }
+      .reader-nav { height: auto; padding: 10px 12px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .reader-brand, .nav-key { display: none; }
+      .doc-tabs { display: flex; overflow-x: auto; gap: 4px; padding-bottom: 2px; }
+      .doc-tab { flex: 0 0 auto; min-height: 36px; width: auto; padding: 7px 10px; }
+      .reader-main { height: calc(100% - 58px); }
+      .reader-head { padding: 16px; }
+      .reader-actions .source-text { display: none; }
+      .reader-context { padding: 14px 16px 0; }
+      .document { padding: 26px 20px 70px; }
+      .document table { display: block; overflow-x: auto; }
+      .ledger-head { grid-template-columns: 54px minmax(0, 1fr); padding: 14px; }
+      .ledger-fields { grid-template-columns: 1fr; }
+      .ledger-field, .ledger-field:nth-child(odd), .ledger-field:last-child, .ledger-field:nth-last-child(2):nth-child(odd) { border-right: 0; border-bottom: 1px solid var(--line); }
+      .ledger-field:last-child { border-bottom: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="shell masthead">
+    <div>
+      <div class="eyebrow">Evidence-to-action portfolio</div>
+      <h1>Paper Forge<br>Console</h1>
+      <p class="charter">Decide what to learn, test, apply, transfer, or reject. Keep the evidence and the next action together.</p>
+    </div>
+    <div>
+      <div class="loop-note"><strong>Turn evidence into leverage.</strong>Use the queues to resolve uncertainty, route valuable findings, and make the next useful move.</div>
+      <div class="stats" aria-label="Library summary">
+        <div class="stat"><b id="stat-total">0</b><span>Artifacts</span></div>
+        <div class="stat"><b id="stat-attention">0</b><span>Needs approver</span></div>
+        <div class="stat"><b id="stat-unclassified">0</b><span>Unclassified</span></div>
+        <div class="stat"><b id="stat-unassessed">0</b><span>Unassessed</span></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <nav id="workspace-nav" class="workspace-nav" aria-label="Paper Forge workspace">
+      <button type="button" data-route="home" aria-current="page">Home</button>
+      <button type="button" data-route="library">Library</button>
+      <button type="button" data-route="maps">Map</button>
+      <span class="nav-divider" aria-hidden="true"></span>
+      <span id="endeavor-nav"></span>
+    </nav>
+
+    <section id="home" class="home" aria-label="Action workspace">
+      <div class="home-intro">
+        <div>
+          <div class="eyebrow" id="home-kicker">Today in Paper Forge</div>
+          <h2 id="home-title">Move useful evidence into action.</h2>
+          <p id="home-copy">Resolve decisions first. Then apply, test, or refresh the strongest material.</p>
+        </div>
+        <div id="attention-card" class="home-card attention-card"></div>
+      </div>
+      <div id="debt-strip" class="debt-strip"></div>
+      <div class="queue-grid">
+        <section class="queue-card"><header class="queue-head"><h3>Needs approver</h3><span>Decision</span></header><div id="queue-owner" class="queue-list"></div></section>
+        <section class="queue-card"><header class="queue-head"><h3>Act now</h3><span>Apply</span></header><div id="queue-act" class="queue-list"></div></section>
+        <section class="queue-card"><header class="queue-head"><h3>Test next</h3><span>Test</span></header><div id="queue-test" class="queue-list"></div></section>
+        <section class="queue-card"><header class="queue-head"><h3>Review or refresh</h3><span>Quality</span></header><div id="queue-review" class="queue-list"></div></section>
+        <section class="queue-card"><header class="queue-head"><h3>Recently captured</h3><span>Intake</span></header><div id="queue-recent" class="queue-list"></div></section>
+      </div>
+      __PAPER_FORGE_FIGURES__
+      <div id="endeavor-sections" class="endeavor-grid" hidden>
+        <section class="queue-card"><header class="queue-head"><h3>Highest priority</h3></header><div id="queue-e-priority" class="queue-list"><p class="queue-empty">No assessed items yet.</p></div></section>
+        <section class="queue-card"><header class="queue-head"><h3>Trusted foundations</h3></header><div id="queue-e-foundations" class="queue-list"><p class="queue-empty">No assessed items yet.</p></div></section>
+        <section class="queue-card"><header class="queue-head"><h3>Promising tests</h3></header><div id="queue-e-tests" class="queue-list"><p class="queue-empty">No assessed items yet.</p></div></section>
+        <section class="queue-card"><header class="queue-head"><h3>Reusable methods</h3></header><div id="queue-e-methods" class="queue-list"><p class="queue-empty">No assessed items yet.</p></div></section>
+        <section class="queue-card"><header class="queue-head"><h3>Evidence gaps</h3></header><div id="queue-e-gaps" class="queue-list"><p class="queue-empty">No assessed items yet.</p></div></section>
+        <section class="queue-card"><header class="queue-head"><h3>Exports</h3></header><div id="queue-e-exports" class="queue-list"><p class="queue-empty">No assessed items yet.</p></div></section>
+        <section class="queue-card"><header class="queue-head"><h3>Measured outcomes</h3></header><div id="queue-e-measured" class="queue-list"><p class="queue-empty">No assessed items yet.</p></div></section>
+        <section class="queue-card"><header class="queue-head"><h3>Stale assumptions</h3></header><div id="queue-e-stale" class="queue-list"><p class="queue-empty">No assessed items yet.</p></div></section>
+      </div>
+    </section>
+
+    <section id="controls" class="controls" aria-label="Library filters" hidden>
+      <div class="view-switch toolbar-view" aria-label="Library view">
+        <button type="button" data-view="table" aria-pressed="true">Table</button>
+        <button type="button" data-view="cards" aria-pressed="false">Cards</button>
+      </div>
+      <label class="search-wrap toolbar-search">
+        <span class="sr-only" hidden>Search the library</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m16.5 16.5 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="search" class="search" type="search" placeholder="Search ideas, authors, or titles…" autocomplete="off">
+        <span class="shortcut">/</span>
+      </label>
+      <label class="filter-sort"><span class="sr-only" hidden>Sort library</span><select id="sort-select"><option value="newest">Newest</option><option value="evidence">Evidence quality</option><option value="relevance">Endeavor relevance</option><option value="effort">Lowest effort</option><option value="stale">Most stale</option><option value="item-id">Item ID</option><option value="title">Title</option></select></label>
+      <div class="filter-grid">
+        <label><span class="sr-only" hidden>Filter by endeavor</span><select id="endeavor-filter"><option value="all">All endeavors</option></select></label>
+        <label><span class="sr-only" hidden>Filter by disposition</span><select id="disposition-filter"><option value="all">All dispositions</option><option>Apply</option><option>Test</option><option>Learn</option><option>Watch</option><option>Reference</option><option>Hold</option><option>Retire</option><option>Reject</option></select></label>
+        <label><span class="sr-only" hidden>Filter by topic</span><select id="topic-filter"><option value="all">All topics</option></select></label>
+        <label><span class="sr-only" hidden>Filter by evidence class</span><select id="evidence-filter"><option value="all">All evidence</option></select></label>
+        <label><span class="sr-only" hidden>Filter by kind</span><select id="kind-filter"><option value="all">All kinds</option></select></label>
+        <label><span class="sr-only" hidden>Filter by route</span><select id="route-filter"><option value="all">All routes</option><option>Capture</option><option>Interpret</option><option>Critique</option><option>Verify</option><option>Develop</option></select></label>
+        <label><span class="sr-only" hidden>Filter by stage status</span><select id="stage-filter"><option value="all">All stage states</option><option value="not_started">Not started</option><option value="in_progress">In progress</option><option value="blocked">Blocked</option><option value="complete">Complete</option><option value="skipped">Skipped</option></select></label>
+        <label><span class="sr-only" hidden>Filter by access scope</span><select id="access-filter"><option value="all">All access</option></select></label>
+        <label><span class="sr-only" hidden>Filter by freshness</span><select id="freshness-filter"><option value="all">All freshness</option><option value="current">Current</option><option value="stale">Stale</option><option value="unknown">Unknown</option></select></label>
+        <label><span class="sr-only" hidden>Filter by assessment status</span><select id="assessed-filter"><option value="all">Assessed or not</option><option value="assessed">Assessed</option><option value="unassessed">Unassessed</option></select></label>
+        <label><span class="sr-only" hidden>Filter by export status</span><select id="exported-filter"><option value="all">Exported or not</option><option value="exported">Exported</option><option value="not-exported">Not exported</option></select></label>
+      </div>
+      <div class="column-toggles" aria-label="Optional table columns">
+        <strong>Show columns:</strong>
+        <label><input type="checkbox" data-column="priority">Priority band</label>
+        <label><input type="checkbox" data-column="freshness">Freshness</label>
+        <label><input type="checkbox" data-column="fit">Endeavor fit</label>
+      </div>
+    </section>
+
+    <section id="results-meta" class="results-meta" hidden>
+      <h2 id="view-title">The library</h2>
+      <div class="results-actions"><p id="result-count" aria-live="polite"></p><button id="clear-filters" class="reset-filters" type="button">Clear filters</button></div>
+    </section>
+    <section id="table-wrap" class="table-wrap" aria-label="Research artifact table" hidden>
+      <table class="library-table"><thead><tr><th>Item ID</th><th>Title</th><th>Kind</th><th>Evidence class</th><th>Disposition</th><th>Stage</th><th>Next action</th><th class="optional-column column-priority" hidden>Priority band</th><th class="optional-column column-freshness" hidden>Freshness</th><th class="optional-column column-fit" hidden>Endeavor fit</th></tr></thead><tbody id="library-table-body"></tbody></table>
+    </section>
+    <section id="grid" class="grid" aria-label="Research artifacts"></section>
+    <section id="explore" class="explore" aria-label="Visual artifact map" hidden>
+      <div class="map-legend"><span><i class="direct"></i>Recorded relation</span><span><i></i>Shared topic</span><span>Choose an item to redraw its neighborhood.</span></div>
+      <div class="explore-layout">
+        <div id="map-stage" class="map-stage">
+          <svg id="map-lines" class="map-lines" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true"></svg>
+          <div id="map-nodes"></div>
+        </div>
+        <aside id="map-detail" class="map-detail" aria-live="polite"></aside>
+      </div>
+    </section>
+    <div id="empty" class="empty"><strong id="empty-title">No artifacts match.</strong><br><span id="empty-copy">Try a broader phrase or reset a filter.</span></div>
+  </main>
+
+  <footer class="shell">Self-contained and local-first. The workbooks remain the source of truth; rebuild this view with <code>python3 scripts/build_library.py</code>.</footer>
+
+  <dialog id="reader" aria-labelledby="reader-title">
+    <div class="reader">
+      <aside class="reader-nav">
+        <div class="reader-brand">Forge workbook</div>
+        <nav id="doc-tabs" class="doc-tabs" aria-label="Workbook sections"></nav>
+        <div class="nav-key"><span>● completed</span><span>○ skipped</span></div>
+      </aside>
+      <section class="reader-main">
+        <header class="reader-head">
+          <div>
+            <div id="reader-kicker" class="reader-kicker"></div>
+            <h2 id="reader-title" class="reader-title"></h2>
+            <div id="reader-byline" class="reader-byline"></div>
+          </div>
+          <div class="reader-actions">
+            <a id="source-link" class="action" href="#" target="_blank" rel="noreferrer"><span class="source-text">Open source</span><span aria-hidden="true">↗</span></a>
+            <button id="close-reader" class="action close" type="button" aria-label="Close reader">×</button>
+          </div>
+        </header>
+        <div class="reader-context">
+          <div class="context-card"><b id="evidence-label"></b><p id="provenance-note"></p></div>
+          <div class="context-card"><b id="action-label">Next action</b><p id="next-action"></p></div>
+          <div class="context-card"><b>Follow a connection</b><div id="reader-related" class="reader-related"></div></div>
+        </div>
+        <section id="assessment-panels" class="assessment-panels" aria-label="Assessment panels"></section>
+        <article id="document" class="document"></article>
+      </section>
+    </div>
+  </dialog>
+
+  <script id="library-data" type="application/json">__PAPER_FORGE_LIBRARY_DATA__</script>
+  <script id="forge-config" type="application/json">__PAPER_FORGE_CONFIG__</script>
+  <script>
+    (() => {
+      'use strict';
+      const papers = JSON.parse(document.getElementById('library-data').textContent);
+      const forgeConfig = JSON.parse(document.getElementById('forge-config').textContent);
+      const grid = document.getElementById('grid');
+      const home = document.getElementById('home');
+      const controls = document.getElementById('controls');
+      const resultsMeta = document.getElementById('results-meta');
+      const tableWrap = document.getElementById('table-wrap');
+      const tableBody = document.getElementById('library-table-body');
+      const empty = document.getElementById('empty');
+      const search = document.getElementById('search');
+      const endeavorFilter = document.getElementById('endeavor-filter');
+      const dispositionFilter = document.getElementById('disposition-filter');
+      const topicFilter = document.getElementById('topic-filter');
+      const evidenceFilter = document.getElementById('evidence-filter');
+      const kindFilter = document.getElementById('kind-filter');
+      const routeFilter = document.getElementById('route-filter');
+      const stageFilter = document.getElementById('stage-filter');
+      const accessFilter = document.getElementById('access-filter');
+      const freshnessFilter = document.getElementById('freshness-filter');
+      const assessedFilter = document.getElementById('assessed-filter');
+      const exportedFilter = document.getElementById('exported-filter');
+      const sortSelect = document.getElementById('sort-select');
+      const resultCount = document.getElementById('result-count');
+      const explore = document.getElementById('explore');
+      const mapLines = document.getElementById('map-lines');
+      const mapNodes = document.getElementById('map-nodes');
+      const mapDetail = document.getElementById('map-detail');
+      const reader = document.getElementById('reader');
+      const documentEl = document.getElementById('document');
+      const docTabs = document.getElementById('doc-tabs');
+      let activePaper = null;
+      let currentView = 'home';
+      let activeEndeavor = null;
+      let quickState = null;
+      let activeMapSlug = papers.find(paper => paper.evidenceClass !== 'rejected source')?.slug || papers[0]?.slug || null;
+      let returnHash = '#view/home';
+      let readerReturnFocus = null;
+
+      const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
+      const slugClass = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+      // "Unclassified" is a review-queue marker, never a similarity signal (config/taxonomy.json).
+      function sharedThemes(left, right) {
+        return left.themes.filter(theme => theme !== 'Unclassified' && right.themes.includes(theme));
+      }
+
+      function relationTarget(relation) {
+        return String(relation?.item_id || relation?.target || relation?.id || '').toLowerCase();
+      }
+
+      function hasDirectRelation(left, right) {
+        const targets = new Set([String(right.itemId || '').toLowerCase(), right.slug.toLowerCase()]);
+        return (left.relations || []).some(relation => targets.has(relationTarget(relation)));
+      }
+
+      function relatedPapers(paper, source = papers) {
+        return source
+          .filter(candidate => candidate.slug !== paper.slug)
+          .map(candidate => {
+            const direct = hasDirectRelation(paper, candidate) || hasDirectRelation(candidate, paper);
+            const themes = sharedThemes(paper, candidate);
+            return {paper: candidate, direct, themes, score: (direct ? 100 : 0) + themes.length * 10 + (candidate.evidenceClass === paper.evidenceClass ? 1 : 0)};
+          })
+          .filter(result => result.direct || result.themes.length)
+          .sort((left, right) => right.score - left.score || right.paper.number - left.paper.number);
+      }
+
+      function statusBucket(paper) {
+        const blocker = String(paper.blocker || '').toLowerCase();
+        const nextAction = String(paper.nextAction || '').toLowerCase();
+        if (paper.provenanceStatus === 'failed') return 'failed-integrity';
+        if (paper.evidenceClass === 'rejected source' || paper.dispositionEffective === 'Reject' || paper.disposition === 'Reject') return 'rejected';
+        if (paper.assessed && paper.applyBlocked) return 'blocked';
+        if (paper.missingOutcome) return 'missing-outcome';
+        if (blocker.includes('human-owned') || nextAction.startsWith('owner gives')) return 'needs-approver';
+        if (paper.blocker) return 'blocked';
+        if ((paper.themes || []).includes('Unclassified') || paper.evidenceClass === 'unknown') return 'unclassified';
+        if (!paper.assessed) return 'unassessed';
+        if (paper.freshness?.status === 'stale') return 'stale';
+        if (paper.lifecycle === 'route_complete') return 'route-complete';
+        return 'active';
+      }
+
+      function numericScore(paper, key) {
+        const value = paper.scores?.[key];
+        if (typeof value === 'number') return value;
+        return typeof value?.score === 'number' ? value.score : null;
+      }
+
+      function endeavorRelevance(paper, key) {
+        if (!key || key === 'all') return null;
+        const value = paper.endeavors?.[key]?.relevance;
+        return typeof value === 'number' ? value : typeof value?.score === 'number' ? value.score : null;
+      }
+
+      function scoreEntry(paper, key) {
+        const value = paper.scores?.[key];
+        if (value && typeof value === 'object') return { score: typeof value.score === 'number' ? value.score : null, rationale: value.rationale || null };
+        return { score: typeof value === 'number' ? value : null, rationale: null };
+      }
+
+      function dispositionLabel(paper) {
+        if (!paper.assessed) return paper.assessmentStatus === 'draft' ? 'Proposed use · not approved' : `Assessment ${paper.assessmentStatus || 'pending'}`;
+        if (paper.applyBlocked) return `${paper.dispositionEffective || paper.disposition} · blocked`;
+        return paper.dispositionEffective || paper.disposition || 'Unassessed';
+      }
+
+      const DIMENSION_LABELS = { evidence_quality: 'Evidence quality', novelty: 'Novelty', actionability: 'Actionability', durability: 'Durability', implementation_effort: 'Implementation effort', downside_risk: 'Downside risk', urgency: 'Urgency' };
+
+      function optionalLearningPanel(paper) {
+        const exercise = paper.optionalLearning || {};
+        return `<details class="panel"><summary>Optional learning · ${escapeHtml(exercise.status || 'not requested')}</summary><p>Feynman: ${escapeHtml(exercise.mode || 'off')}. ${escapeHtml(exercise.reason || '')}</p><p>Paused exercises do not block research or application. Resume only on an explicit request.</p></details>`;
+      }
+
+      function renderAssessmentPanels(paper) {
+        const host = document.getElementById('assessment-panels');
+        const id = paper.itemId || `PF-${String(paper.number).padStart(4, '0')}`;
+        if (!paper.assessmentStatus) {
+          host.innerHTML = `<div class="panel"><h3>Assessment</h3><p>Assessment pending. No reviewed judgment exists for this item.</p><p><code>/pf intake ${escapeHtml(id)} --dry-run</code> prints a null draft.</p></div>`;
+          host.innerHTML += optionalLearningPanel(paper);
+          return;
+        }
+        const scores = Object.keys(DIMENSION_LABELS).map(key => {
+          const entry = scoreEntry(paper, key);
+          return `<li><span>${DIMENSION_LABELS[key]}</span><b class="${entry.score === null ? 'null' : ''}">${entry.score === null ? '–' : `${entry.score}/4`}</b><span class="${entry.score === null ? 'null' : ''}">${escapeHtml(entry.rationale || 'not assessed')}</span></li>`;
+        }).join('');
+        const flags = (paper.safetyFlags || []).length ? paper.safetyFlags.join(', ') : 'none';
+        const evidencePanel = `<div class="panel"><h3>Evidence</h3><p><b>${escapeHtml(dispositionLabel(paper))}</b> — ${escapeHtml(paper.dispositionRationale || 'no rationale recorded')}</p>${paper.applyBlocked ? `<p class="block-reason">${escapeHtml(paper.blockReason)}</p>` : ''}<ul class="score-grid">${scores}</ul><p class="panel-meta">Assessed ${escapeHtml(paper.assessedAt || '?')} by ${escapeHtml(paper.assessor || '?')} · revision ${escapeHtml(String(paper.revision || 1))}${paper.historyCount ? ` (${paper.historyCount} prior)` : ''} · safety flags: ${escapeHtml(flags)} · freshness ${escapeHtml(paper.freshness?.status || 'unknown')}${paper.freshness?.review_by ? `, review by ${escapeHtml(paper.freshness.review_by)}` : ''}</p></div>`;
+        const fits = Object.entries(paper.endeavors || {}).filter(([, fit]) => fit && (fit.relevance !== null || fit.use_case));
+        const fitRows = fits.length ? fits.map(([key, fit]) => {
+          const label = forgeConfig.portfolio?.endeavors?.[key]?.label || key;
+          const relevance = typeof fit.relevance === 'number' ? `${fit.relevance}/4` : '–';
+          const leverage = typeof fit.expected_leverage === 'number' ? `${fit.expected_leverage}/4` : '–';
+          return `<p><b>${escapeHtml(label)}</b> · relevance ${relevance} · leverage ${leverage} · confidence ${escapeHtml(fit.confidence || '–')}${fit.owner ? ` · owner ${escapeHtml(fit.owner)}` : ''}<br>${fit.use_case ? escapeHtml(fit.use_case) : '<span class="null">no use case yet</span>'}${fit.suggested_next_action ? `<br><span class="panel-meta">Suggested: ${escapeHtml(fit.suggested_next_action)}</span>` : ''}</p>`;
+        }).join('') : '<p class="null">No endeavor fit recorded.</p>';
+        const usefulnessPanel = `<div class="panel"><h3>Usefulness</h3>${fitRows}<p class="panel-meta">Suggestions are recommendations; commitments live in Notes and link back through receipts.</p></div>`;
+        const state = paper.applicationState || 'unassessed';
+        const exportRows = (paper.exports || []).map(x => `<p><b>${escapeHtml(x.id)}</b> → ${escapeHtml(x.target)} · ${escapeHtml(x.date || '')} · ${escapeHtml(x.approval)}${x.recordId ? ` · ${escapeHtml(x.recordId)}` : ''}<br><span class="panel-meta">${escapeHtml(x.recommendation || '')}</span><br><a href="${escapeHtml(x.package || '#')}" target="_blank" rel="noreferrer">package</a></p>`).join('');
+        const outcomeRows = (paper.outcomes || []).map(o => `<p><b>${escapeHtml(o.id)}</b> for ${escapeHtml(o.exportId)} · ${escapeHtml(o.period)}<br>${escapeHtml(o.observed || '')}<br><span class="panel-meta">Uncertainty: ${escapeHtml(o.uncertainty || '')}${o.assessmentChange ? ` · assessment revision ${escapeHtml(String(o.assessmentChange.revision_before))} → ${escapeHtml(String(o.assessmentChange.revision_after))}` : ''}</span></p>`).join('');
+        const transferPanel = `<div class="panel"><h3>Transfer</h3><p>Application state: <b>${escapeHtml(state)}</b>${paper.storedApplicationState && paper.storedApplicationState !== state ? ` <span class="panel-meta">(stored: ${escapeHtml(paper.storedApplicationState)}; derived from the ledgers)</span>` : ''}</p>${paper.threatReview ? `<p>Threat review ${escapeHtml(paper.threatReview.date || '')} by ${escapeHtml(paper.threatReview.reviewer || '')}: ${escapeHtml(paper.threatReview.summary || '')}</p>` : ''}${exportRows || '<p class="panel-meta">No approved use recorded; export receipts appear here.</p>'}${outcomeRows || (paper.exports || []).length ? outcomeRows || '<p class="panel-meta">Outcome missing; record an observation before claiming effectiveness.</p>' : ''}<p class="panel-meta">Exported and measured states derive from the ledgers; Paper Forge never writes to Notes or Projects.</p></div>`;
+        const intake = paper.intake;
+        const intakePanel = intake ? `<div class="panel"><h3>Intake assessment · ${escapeHtml(paper.assessmentStatus)}</h3>${['idea','support','unknowns','potential_use','effort','risk','next_action'].map(key => `<p><b>${escapeHtml(key.replaceAll('_',' '))}:</b> ${escapeHtml(intake[key] || 'Unknown')}</p>`).join('')}<p>External attribution: ${escapeHtml(intake.attribution)}. Local integrity: ${escapeHtml(paper.provenanceStatus)}. Neither proves claim truth.</p><p>Confidence: ${escapeHtml(intake.confidence || 'unknown')}</p><p>Citations: ${escapeHtml((intake.citations || []).join('; ') || 'Unknown')}</p><p>Evidence locations: ${escapeHtml((intake.evidence_locations || []).join('; ') || 'Unknown')}</p><p>Conflicts: ${escapeHtml((intake.conflicts || []).join('; ') || 'None recorded')}</p>${intake.failure ? `<p>Failure: ${escapeHtml(intake.failure)}</p>` : ''}</div>` : '';
+        const rec = paper.recommendation;
+        const proposed = rec ? `<div class="panel"><h3>Proposed use · not approval</h3><p>${escapeHtml(rec.disposition)}: ${escapeHtml(rec.rationale)}</p>${rec.applications.map(app => `<p><b>${escapeHtml(app.purpose)}</b><br>${escapeHtml(app.destination)} / ${escapeHtml(app.project_path)} · ${escapeHtml(app.artifact_type)}<br>Sources: ${escapeHtml(app.item_ids.join(', '))}<br>Limits: ${escapeHtml(app.evidence_limits)}<br>Check: ${escapeHtml(app.success_check)}</p>`).join('')}</div>` : '';
+        host.innerHTML = intakePanel + proposed + evidencePanel + usefulnessPanel + transferPanel + optionalLearningPanel(paper);
+      }
+
+      function currentStageLabel(paper) {
+        if (paper.currentStage) return paper.currentStage.replace('_', ' ');
+        return paper.lifecycle === 'route_complete' ? 'route complete' : 'not started';
+      }
+
+      function inline(text) {
+        let value = escapeHtml(text);
+        value = value.replace(/`([^`]+)`/g, '<code>$1</code>');
+        value = value.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer">$1</a>');
+        value = value.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        value = value.replace(/__([^_]+)__/g, '<strong>$1</strong>');
+        value = value.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em>$1</em>');
+        return value;
+      }
+
+      function markdown(md, basePath) {
+        const lines = md.replace(/\r\n/g, '\n').split('\n');
+        const out = [];
+        let paragraph = [];
+        let list = null;
+        let table = [];
+        let inCode = false;
+        let code = [];
+
+        const resolveLinks = (html) => html.replace(/href="(?!https?:|mailto:|#)([^"]+)"/g, (_, href) => {
+          const normalized = new URL(href, new URL(basePath, window.location.href)).href;
+          return `href="${normalized}"`;
+        });
+        const flushParagraph = () => {
+          if (!paragraph.length) return;
+          const raw = paragraph.join(' ').replace(/\s{2,}/g, ' ').trim();
+          const status = raw.match(/^Status:\s*`([^`]+)`(?:\s+Completed:\s*(.+))?$/i);
+          const callout = raw.match(/^\*\*(Observation|Inference|Speculation):\*\*\s*(.*)$/i);
+          if (status) {
+            out.push(`<div class="doc-status"><span>Status</span><strong>${inline(status[1].replace('_', ' '))}</strong>${status[2] ? `<time>${inline(status[2])}</time>` : ''}</div>`);
+          } else if (callout) {
+            const kind = callout[1].toLowerCase();
+            out.push(`<aside class="doc-callout ${kind}"><div class="callout-label">${escapeHtml(callout[1])}</div><p>${inline(callout[2])}</p></aside>`);
+          } else {
+            out.push(`<p>${inline(raw)}</p>`);
+          }
+          paragraph = [];
+        };
+        const flushList = () => { if (list) { out.push(`</${list}>`); list = null; } };
+        const flushTable = () => {
+          if (!table.length) return;
+          const rows = table.map(line => line.trim().replace(/^\||\|$/g, '').split('|').map(cell => cell.trim()));
+          const hasDivider = rows[1] && rows[1].every(cell => /^:?-{3,}:?$/.test(cell));
+          const bodyStart = hasDivider ? 2 : 1;
+          const headers = rows[0];
+          const records = rows.slice(bodyStart);
+          if (headers.length >= 4 && headers[0].toLowerCase() === 'claim') {
+            out.push('<div class="evidence-ledger" role="list" aria-label="Claim-evidence ledger">');
+            records.forEach((row, index) => {
+              out.push(`<article class="ledger-card" role="listitem"><header class="ledger-head"><span class="ledger-index">Claim ${String(index + 1).padStart(2, '0')}</span><h3>${inline(row[0] || '')}</h3></header><dl class="ledger-fields">`);
+              headers.slice(1).forEach((header, fieldIndex) => {
+                out.push(`<div class="ledger-field field-${slugClass(header)}"><dt>${inline(header)}</dt><dd>${inline(row[fieldIndex + 1] || '')}</dd></div>`);
+              });
+              out.push('</dl></article>');
+            });
+            out.push('</div>');
+          } else {
+            out.push('<table><thead><tr>' + headers.map(cell => `<th>${inline(cell)}</th>`).join('') + '</tr></thead><tbody>');
+            records.forEach(row => out.push('<tr>' + row.map(cell => `<td>${inline(cell)}</td>`).join('') + '</tr>'));
+            out.push('</tbody></table>');
+          }
+          table = [];
+        };
+
+        for (const line of lines) {
+          if (line.startsWith('```')) {
+            flushParagraph(); flushList(); flushTable();
+            if (inCode) { out.push(`<pre><code>${escapeHtml(code.join('\n'))}</code></pre>`); code = []; }
+            inCode = !inCode;
+            continue;
+          }
+          if (inCode) { code.push(line); continue; }
+          if (/^\|.*\|\s*$/.test(line)) { flushParagraph(); flushList(); table.push(line); continue; }
+          if (table.length) flushTable();
+          const heading = line.match(/^(#{1,4})\s+(.+)$/);
+          if (heading) { flushParagraph(); flushList(); out.push(`<h${heading[1].length}>${inline(heading[2])}</h${heading[1].length}>`); continue; }
+          const quote = line.match(/^>\s?(.*)$/);
+          if (quote) { flushParagraph(); flushList(); out.push(`<blockquote><p>${inline(quote[1])}</p></blockquote>`); continue; }
+          const bullet = line.match(/^\s*[-*]\s+(.+)$/);
+          const ordered = line.match(/^\s*\d+\.\s+(.+)$/);
+          if (bullet || ordered) {
+            flushParagraph();
+            const wanted = bullet ? 'ul' : 'ol';
+            if (list !== wanted) { flushList(); out.push(`<${wanted}>`); list = wanted; }
+            out.push(`<li>${inline((bullet || ordered)[1])}</li>`);
+            continue;
+          }
+          if (/^---+$/.test(line.trim())) { flushParagraph(); flushList(); out.push('<hr>'); continue; }
+          if (!line.trim()) { flushParagraph(); flushList(); continue; }
+          paragraph.push(line.trim());
+        }
+        flushParagraph(); flushList(); flushTable();
+        if (inCode) out.push(`<pre><code>${escapeHtml(code.join('\n'))}</code></pre>`);
+        return resolveLinks(out.join('\n'));
+      }
+
+      function stageLine(paper) {
+        return Object.values(paper.statuses).map(status => `<span class="stage-dot ${escapeHtml(status)}" title="${escapeHtml(status.replace('_', ' '))}"></span>`).join('');
+      }
+
+      function statusLabel(paper) {
+        return statusBucket(paper).replace('-', ' ');
+      }
+
+      function truncateText(value, limit) {
+        const text = String(value || '');
+        if (text.length <= limit) return text;
+        return `${text.slice(0, limit - 1).trimEnd()}…`;
+      }
+
+      function compactCreators(authors) {
+        const creators = (authors || []).filter(Boolean);
+        if (!creators.length) return 'Creator unknown';
+        const label = creators.length > 2 ? `${creators[0]} et al.` : creators.join(', ');
+        return truncateText(label, 60);
+      }
+
+      function card(paper) {
+        return `
+          <article class="card" data-number="${paper.number}">
+            <div class="card-top">
+              <span class="number">ARTIFACT ${String(paper.number).padStart(2, '0')}</span>
+              <div class="badges">
+                <span class="badge ${slugClass(paper.route)}">${escapeHtml(paper.route)}</span>
+                <span class="badge ${slugClass(paper.evidenceClass)}">${escapeHtml(paper.evidenceClass)}</span>
+              </div>
+            </div>
+            <h3>${escapeHtml(paper.title)}</h3>
+            <p class="byline">${escapeHtml(paper.authors.join(', '))} · ${escapeHtml(paper.year)}</p>
+            <p class="summary">${escapeHtml(paper.summary)}</p>
+            <div class="theme-list">${paper.themes.map(theme => `<span class="theme">${escapeHtml(theme)}</span>`).join('')}</div>
+            <div class="card-footer">
+              <div class="stage-line" aria-label="Stage status">${stageLine(paper)}</div>
+              <button class="open-card" type="button" data-open="${escapeHtml(paper.slug)}"><span>Open workbook</span><span aria-hidden="true">→</span></button>
+            </div>
+          </article>`;
+      }
+
+      function tableRow(paper) {
+        const next = paper.nextAction || paper.blocker || 'Assess and define the next action.';
+        const compactNext = truncateText(next, 160);
+        const selectedEndeavor = endeavorFilter.value === 'all' ? null : endeavorFilter.value;
+        const relevance = endeavorRelevance(paper, selectedEndeavor);
+        return `<tr data-open="${escapeHtml(paper.slug)}" tabindex="0">
+          <td><span class="number">${escapeHtml(paper.itemId || `PF-${String(paper.number).padStart(4, '0')}`)}</span></td>
+          <td><strong class="table-title" title="${escapeHtml(paper.title)}">${escapeHtml(paper.title)}</strong><small class="table-sub">${escapeHtml(compactCreators(paper.authors))}</small></td>
+          <td>${escapeHtml(paper.kind)}</td>
+          <td>${escapeHtml(paper.evidenceClass)}</td>
+          <td${paper.applyBlocked ? ` title="${escapeHtml(paper.blockReason || '')}"` : ''}>${escapeHtml(dispositionLabel(paper))}</td>
+          <td><span class="status-label ${slugClass(statusBucket(paper))}">${escapeHtml(currentStageLabel(paper))}</span></td>
+          <td class="next-cell" title="${escapeHtml(next)}"><span class="next-preview">${escapeHtml(compactNext)}</span></td>
+          <td class="optional-column column-priority" hidden>${escapeHtml(paper.assessed ? 'Pending formula' : 'Unassessed')}</td>
+          <td class="optional-column column-freshness" hidden>${escapeHtml(paper.freshness?.status || 'unknown')}</td>
+          <td class="optional-column column-fit" hidden>${escapeHtml(relevance === null ? 'Unassessed' : `${relevance}/4`)}</td>
+        </tr>`;
+      }
+
+      function filteredPapers() {
+        const query = search.value.trim().toLowerCase();
+        const endeavor = endeavorFilter.value;
+        const disposition = dispositionFilter.value;
+        const topic = topicFilter.value;
+        const evidence = evidenceFilter.value;
+        const kind = kindFilter.value;
+        const route = routeFilter.value;
+        const stage = stageFilter.value;
+        const access = accessFilter.value;
+        const freshness = freshnessFilter.value;
+        const assessed = assessedFilter.value;
+        const exported = exportedFilter.value;
+        const filtered = papers.filter(paper => {
+          const haystack = [paper.itemId, paper.title, paper.authors.join(' '), paper.summary, paper.kind, paper.type, paper.routeReason, paper.evidenceClass, paper.disposition, paper.nextAction, paper.themes.join(' ')].join(' ').toLowerCase();
+          return (!query || haystack.includes(query)) &&
+            (!quickState || statusBucket(paper) === quickState) &&
+            (endeavor === 'all' || Boolean(paper.endeavors?.[endeavor])) &&
+            (disposition === 'all' || paper.disposition === disposition) &&
+            (topic === 'all' || paper.themes.includes(topic)) &&
+            (evidence === 'all' || paper.evidenceClass === evidence) &&
+            (kind === 'all' || paper.kind === kind) &&
+            (route === 'all' || paper.route === route) &&
+            (stage === 'all' || Object.values(paper.statuses).includes(stage)) &&
+            (access === 'all' || paper.access === access) &&
+            (freshness === 'all' || paper.freshness?.status === freshness) &&
+            (assessed === 'all' || (assessed === 'assessed') === paper.assessed) &&
+            (exported === 'all' || (exported === 'exported') === paper.exported);
+        });
+        const unassessedLast = (leftValue, rightValue) => {
+          if (leftValue === null && rightValue === null) return 0;
+          if (leftValue === null) return 1;
+          if (rightValue === null) return -1;
+          return rightValue - leftValue;
+        };
+        return filtered.sort((left, right) => {
+          if (sortSelect.value === 'item-id') return String(left.itemId).localeCompare(String(right.itemId));
+          if (sortSelect.value === 'title') return left.title.localeCompare(right.title);
+          if (sortSelect.value === 'evidence') return unassessedLast(numericScore(left, 'evidence_quality'), numericScore(right, 'evidence_quality')) || left.title.localeCompare(right.title);
+          if (sortSelect.value === 'relevance') return unassessedLast(endeavorRelevance(left, endeavor), endeavorRelevance(right, endeavor)) || left.title.localeCompare(right.title);
+          if (sortSelect.value === 'effort') {
+            const leftEffort = numericScore(left, 'implementation_effort');
+            const rightEffort = numericScore(right, 'implementation_effort');
+            if (leftEffort === null || rightEffort === null) return unassessedLast(leftEffort === null ? null : -leftEffort, rightEffort === null ? null : -rightEffort);
+            return leftEffort - rightEffort || left.title.localeCompare(right.title);
+          }
+          if (sortSelect.value === 'stale') {
+            const leftDate = left.freshness?.review_by || '9999-12-31';
+            const rightDate = right.freshness?.review_by || '9999-12-31';
+            return leftDate.localeCompare(rightDate) || left.title.localeCompare(right.title);
+          }
+          return right.number - left.number;
+        });
+      }
+
+      function renderMapDetail(paper) {
+        const related = relatedPapers(paper);
+        mapDetail.innerHTML = `
+          <span class="number">ARTIFACT ${String(paper.number).padStart(2, '0')}</span>
+          <h3>${escapeHtml(paper.title)}</h3>
+          <p class="byline">${escapeHtml(paper.authors.join(', '))} · ${escapeHtml(paper.year)}</p>
+          <p><span class="status-label ${slugClass(statusBucket(paper))}">${escapeHtml(paper.evidenceClass)} · ${escapeHtml(statusLabel(paper))}</span></p>
+          <div class="theme-list">${paper.themes.map(theme => `<span class="theme">${escapeHtml(theme)}</span>`).join('')}</div>
+          <p class="summary">${escapeHtml(paper.nextAction || paper.summary)}</p>
+          <div class="related-heading">Connected artifacts</div>
+          <div class="related-list">${related.slice(0, 5).map(result => `<button class="related-link" type="button" data-map-select="${escapeHtml(result.paper.slug)}">${String(result.paper.number).padStart(2, '0')} · ${escapeHtml(result.paper.title)} <small>${result.direct ? 'recorded relation' : result.themes.join(', ')}</small></button>`).join('') || '<span>No recorded or topic connection yet.</span>'}</div>
+          <button class="action map-open" type="button" data-open="${escapeHtml(paper.slug)}">Read workbook <span aria-hidden="true">→</span></button>`;
+      }
+
+      function renderExplore(filtered) {
+        if (!filtered.some(paper => paper.slug === activeMapSlug)) activeMapSlug = filtered[0]?.slug || null;
+        const selected = filtered.find(paper => paper.slug === activeMapSlug);
+        if (!selected) { mapLines.innerHTML = ''; mapNodes.innerHTML = ''; mapDetail.innerHTML = ''; return; }
+        const neighbors = relatedPapers(selected, filtered).slice(0, 12);
+        const graph = [selected, ...neighbors.map(result => result.paper)];
+        const positions = new Map([[selected.slug, [500, 310]]]);
+        neighbors.forEach((result, index) => {
+          const angle = (Math.PI * 2 * index / Math.max(neighbors.length, 1)) - Math.PI / 2;
+          const radius = index % 2 ? 245 : 205;
+          positions.set(result.paper.slug, [500 + Math.cos(angle) * radius, 310 + Math.sin(angle) * radius]);
+        });
+        mapLines.innerHTML = neighbors.map(result => {
+          const [x2, y2] = positions.get(result.paper.slug);
+          return `<line class="map-edge ${result.direct ? 'active' : 'related'}" x1="500" y1="310" x2="${x2}" y2="${y2}"></line>`;
+        }).join('');
+        mapNodes.innerHTML = graph.map(paper => {
+          const [x, y] = positions.get(paper.slug);
+          const selectedClass = paper.slug === activeMapSlug ? ' selected' : ' related';
+          return `<button class="map-node${selectedClass}" style="--x:${x / 10}%;--y:${y / 6.2}%" type="button" data-map-select="${escapeHtml(paper.slug)}" aria-label="Explore ${escapeHtml(paper.title)}">
+            <span class="map-node-number">${String(paper.number).padStart(2, '0')} · ${escapeHtml(paper.route)}</span>
+            <span class="map-node-title">${escapeHtml(paper.title)}</span>
+          </button>`;
+        }).join('');
+        renderMapDetail(selected);
+      }
+
+      function queueRow(paper, reason) {
+        const command = `/pf resume ${paper.itemId || `PF-${String(paper.number).padStart(4, '0')}`}`;
+        return `<div class="queue-row"><button class="queue-open" type="button" data-open="${escapeHtml(paper.slug)}"><span><b>${escapeHtml(paper.itemId)} · ${escapeHtml(paper.title)}</b><small>${escapeHtml(reason)}</small><code class="queue-command" title="Copy this command">${escapeHtml(command)}</code></span></button><span aria-hidden="true">→</span></div>`;
+      }
+
+      function fillQueue(id, items, fallback, reasonFor = paper => paper.nextAction || paper.blocker || 'Open the workbook for orientation.') {
+        document.getElementById(id).innerHTML = items.slice(0, 7).map(paper => queueRow(paper, reasonFor(paper))).join('') || `<p class="queue-empty">${escapeHtml(fallback)}</p>`;
+      }
+
+      function renderHome() {
+        const endeavor = activeEndeavor && forgeConfig.portfolio?.endeavors?.[activeEndeavor];
+        document.querySelector('.queue-grid').hidden = Boolean(endeavor);
+        const figureStrip = document.querySelector('.figure-strip'); if (figureStrip) figureStrip.hidden = Boolean(endeavor);
+        document.getElementById('endeavor-sections').hidden = !endeavor;
+        document.getElementById('home-kicker').textContent = endeavor ? 'Endeavor workspace' : 'Today in Paper Forge';
+        document.getElementById('home-title').textContent = endeavor ? endeavor.label : 'Move useful evidence into action.';
+        document.getElementById('home-copy').textContent = endeavor ? 'Only assessed fit belongs here. Paper Forge does not infer portfolio relevance from topics.' : 'Resolve decisions first. Then apply, test, or refresh the strongest material.';
+        const scope = endeavor ? papers.filter(paper => paper.endeavors?.[activeEndeavor]) : papers;
+        const needsFrank = scope.filter(paper => statusBucket(paper) === 'needs-approver');
+        const actNow = scope.filter(paper => paper.assessed && !paper.applyBlocked && paper.dispositionEffective === 'Apply');
+        const testNext = scope.filter(paper => paper.assessed && !paper.applyBlocked && paper.dispositionEffective === 'Test');
+        const review = scope.filter(paper => paper.assessed && (paper.applyBlocked || ['Watch', 'Reject', 'Retire', 'Hold'].includes(paper.dispositionEffective) || paper.freshness?.status === 'stale'));
+        const recent = endeavor ? [] : [...scope].sort((a, b) => String(b.retrieved || '').localeCompare(String(a.retrieved || '')) || b.number - a.number);
+        document.getElementById('attention-card').innerHTML = `<b class="attention-count">${needsFrank.length}</b><p>${endeavor ? 'No assessed items can require a decision yet.' : 'Items need your decision.'}</p><button class="action" type="button" data-quick-state="needs-approver">Open decision queue</button>`;
+        document.getElementById('debt-strip').innerHTML = `<button class="debt-item" type="button" data-quick-state="unclassified"><b>${scope.filter(p => p.themes.includes('Unclassified')).length}</b><span>unclassified</span></button><button class="debt-item" type="button" data-assessed="unassessed"><b>${scope.filter(p => !p.assessed).length}</b><span>unassessed</span></button><button class="debt-item" type="button"><b>${scope.filter(p => p.provenanceStatus !== 'verified').length}</b><span>unverified</span></button><button class="debt-item" type="button" data-disposition="Reject"><b>${scope.filter(p => p.disposition === 'Reject' || p.evidenceClass === 'rejected source').length}</b><span>rejected</span></button>`;
+        fillQueue('queue-owner', needsFrank, endeavor ? 'No assessed items yet.' : 'No decisions need Alex.');
+        const dispositionReason = paper => paper.dispositionRationale || paper.nextAction || 'Open the workbook for the rationale.';
+        const reviewReason = paper => paper.applyBlocked ? paper.blockReason : (paper.freshness?.status === 'stale' ? `Stale since ${paper.freshness.review_by}.` : dispositionReason(paper));
+        fillQueue('queue-act', actNow, 'No assessed items are ready to apply.', dispositionReason);
+        fillQueue('queue-test', testNext, 'No assessed items are ready to test.', dispositionReason);
+        fillQueue('queue-review', review, 'No assessed items need review or refresh.', reviewReason);
+        fillQueue('queue-recent', recent, endeavor ? 'No assessed items yet.' : 'No captured items.', paper => `Captured ${paper.retrieved || paper.added || 'date unknown'}.`);
+        if (endeavor) renderEndeavorSections(scope, activeEndeavor);
+      }
+
+      function renderEndeavorSections(scope, key) {
+        const assessed = scope.filter(paper => paper.assessed);
+        const evidence = paper => scoreEntry(paper, 'evidence_quality').score;
+        const effort = paper => scoreEntry(paper, 'implementation_effort').score;
+        const durability = paper => scoreEntry(paper, 'durability').score;
+        const relevance = paper => endeavorRelevance(paper, key);
+        const byPriority = [...assessed].filter(paper => !paper.applyBlocked).sort((a, b) => (evidence(b) ?? -1) - (evidence(a) ?? -1) || (relevance(b) ?? -1) - (relevance(a) ?? -1) || (effort(a) ?? 9) - (effort(b) ?? 9) || a.number - b.number);
+        const fitReason = paper => `Evidence ${evidence(paper) ?? '–'}/4 · relevance ${relevance(paper) ?? '–'}/4 · effort ${effort(paper) ?? '–'}/4. ${paper.endeavors?.[key]?.use_case || ''}`.trim();
+        fillQueue('queue-e-priority', byPriority, 'No assessed items yet.', fitReason);
+        fillQueue('queue-e-foundations', assessed.filter(paper => (evidence(paper) ?? 0) >= 3), 'No item has evidence quality 3 or higher yet.', fitReason);
+        fillQueue('queue-e-tests', assessed.filter(paper => !paper.applyBlocked && paper.dispositionEffective === 'Test'), 'No bounded tests are proposed yet.', paper => paper.endeavors?.[key]?.suggested_next_action || paper.dispositionRationale || 'See the workbook.');
+        fillQueue('queue-e-methods', assessed.filter(paper => paper.evidenceClass === 'framework or method' || (durability(paper) ?? 0) >= 3), 'No reusable frameworks or methods assessed yet.', paper => `${paper.evidenceClass} · durability ${durability(paper) ?? '–'}/4.`);
+        fillQueue('queue-e-gaps', assessed.filter(paper => (relevance(paper) ?? 0) >= 3 && (evidence(paper) === null || evidence(paper) <= 1)), 'No high-relevance, low-evidence items yet.', paper => `Relevance ${relevance(paper)}/4 but evidence ${evidence(paper) ?? 'unassessed'}/4.`);
+        fillQueue('queue-e-exports', assessed.filter(paper => ['exported', 'measured'].includes(paper.applicationState)), 'Nothing exported to Notes or Projects yet.', paper => `Application state ${paper.applicationState}.`);
+        fillQueue('queue-e-measured', assessed.filter(paper => paper.applicationState === 'measured'), 'No measured outcomes yet.', paper => `Application state ${paper.applicationState}.`);
+        fillQueue('queue-e-stale', assessed.filter(paper => paper.freshness?.status === 'stale'), 'No stale assessments.', paper => `Review was due ${paper.freshness?.review_by}.`);
+      }
+
+      const incompleteStateCopy = {
+        'no-match': ['No artifacts match.', 'Broaden the query or clear a filter.'],
+        unassessed: ['No unassessed artifacts match.', 'Clear filters or draft an intake assessment.'],
+        unclassified: ['No Unclassified artifacts match.', 'Unclassified is a review marker, not a relationship.'],
+        stale: ['No stale artifacts match.', 'Freshness appears only after an assessment sets a review date.'],
+        blocked: ['No blocked artifacts match.', 'A blocker must be resolved in the owning workbook.'],
+        'missing-outcome': ['No exports are missing outcomes.', 'Outcome state arrives from PR5 receipts.'],
+        'failed-integrity': ['No failed-integrity artifacts match.', 'Repair provenance before any application.']
+      };
+
+      function renderEmpty() {
+        const key = quickState || (assessedFilter.value === 'unassessed' ? 'unassessed' : null) || (topicFilter.value === 'Unclassified' ? 'unclassified' : null) || (freshnessFilter.value === 'stale' ? 'stale' : null) || 'no-match';
+        const [title, copy] = incompleteStateCopy[key] || incompleteStateCopy['no-match'];
+        document.getElementById('empty-title').textContent = title;
+        document.getElementById('empty-copy').textContent = copy;
+      }
+
+      function render() {
+        const filtered = filteredPapers();
+        const isHome = currentView === 'home' || currentView === 'endeavor';
+        home.hidden = !isHome;
+        controls.hidden = isHome || currentView === 'maps';
+        resultsMeta.hidden = isHome;
+        tableWrap.hidden = currentView !== 'table' || !filtered.length;
+        grid.hidden = currentView !== 'cards' || !filtered.length;
+        explore.hidden = currentView !== 'maps' || !filtered.length;
+        empty.style.display = !isHome && !filtered.length ? 'block' : 'none';
+        if (!filtered.length) renderEmpty();
+        if (isHome) renderHome();
+        tableBody.innerHTML = filtered.map(tableRow).join('');
+        document.querySelectorAll('[data-column]').forEach(input => {
+          document.querySelectorAll(`.column-${input.dataset.column}`).forEach(cell => { cell.hidden = !input.checked; });
+        });
+        grid.innerHTML = filtered.map(card).join('');
+        if (currentView === 'maps') renderExplore(filtered);
+        resultCount.textContent = `${filtered.length} of ${papers.length} artifacts`;
+        document.getElementById('view-title').textContent = currentView === 'maps' ? 'Relationship map' : 'Evidence library';
+        document.querySelectorAll('[data-view]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.view === currentView)));
+        document.querySelectorAll('[data-route]').forEach(button => {
+          const active = button.dataset.route === currentView || (currentView === 'endeavor' && button.dataset.route === `endeavors/${activeEndeavor}`);
+          if (active) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
+        });
+      }
+
+      function openPaper(slug, updateHash = true) {
+        const paper = papers.find(item => item.slug === slug);
+        if (!paper) return;
+        readerReturnFocus = document.activeElement;
+        activePaper = paper;
+        document.getElementById('reader-kicker').textContent = `Artifact ${String(paper.number).padStart(2, '0')} · ${paper.type}`;
+        document.getElementById('reader-title').textContent = paper.title;
+        document.getElementById('reader-byline').textContent = `${paper.authors.join(', ')} · ${paper.year}`;
+        document.getElementById('evidence-label').textContent = `${paper.evidenceClass} · ${paper.provenanceStatus}`;
+        document.getElementById('provenance-note').textContent = `${paper.access}. ${paper.accessScope || 'See the preserved source and workbook.'}`;
+        document.getElementById('next-action').textContent = paper.nextAction || paper.blocker || 'Assess this item before portfolio use.';
+        document.getElementById('reader-related').innerHTML = relatedPapers(paper).slice(0, 4).map(result => `<button type="button" data-related="${escapeHtml(result.paper.slug)}">${String(result.paper.number).padStart(2, '0')} · ${escapeHtml(result.paper.title)}</button>`).join('') || '<span>No recorded or topic connection yet.</span>';
+        const sourceLink = document.getElementById('source-link');
+        sourceLink.href = paper.sourceHref || paper.overviewHref;
+        docTabs.innerHTML = paper.documents.map((doc, index) => `<button class="doc-tab${index === 0 ? ' active' : ''}" type="button" data-doc="${escapeHtml(doc.key)}"><span class="status-mark ${escapeHtml(doc.status)}"></span><span>${escapeHtml(doc.label)}<small>${escapeHtml(doc.status.replace('_', ' '))}</small></span></button>`).join('');
+        renderAssessmentPanels(paper);
+        showDocument('overview');
+        if (!reader.open) reader.showModal();
+        if (updateHash) { returnHash = routeHash(); history.pushState(null, '', `#item/${encodeURIComponent(paper.slug)}`); }
+      }
+
+      function showDocument(key) {
+        if (!activePaper) return;
+        const doc = activePaper.documents.find(item => item.key === key);
+        if (!doc) return;
+        docTabs.querySelectorAll('.doc-tab').forEach(tab => tab.classList.toggle('active', tab.dataset.doc === key));
+        const basePath = doc.path.slice(0, doc.path.lastIndexOf('/') + 1);
+        documentEl.innerHTML = markdown(doc.content, basePath);
+        documentEl.closest('.reader-main').scrollTop = 0;
+      }
+
+      function closeReader(updateHash = true) {
+        if (reader.open) reader.close();
+        activePaper = null;
+        if (readerReturnFocus?.focus) readerReturnFocus.focus();
+        if (updateHash) history.pushState(null, '', returnHash);
+      }
+
+      function routeHash() {
+        if (currentView === 'endeavor') return `#view/endeavors/${encodeURIComponent(activeEndeavor)}`;
+        if (currentView === 'table' || currentView === 'cards') {
+          const params = new URLSearchParams();
+          if (search.value.trim()) params.set('text', search.value.trim());
+          const controls = {endeavor: endeavorFilter, disposition: dispositionFilter, topic: topicFilter, evidence: evidenceFilter, kind: kindFilter, route: routeFilter, stage: stageFilter, access: accessFilter, freshness: freshnessFilter, assessed: assessedFilter, exported: exportedFilter};
+          Object.entries(controls).forEach(([key, control]) => { if (control.value !== 'all') params.set(key, control.value); });
+          if (sortSelect.value !== 'newest') params.set('sort', sortSelect.value);
+          return `#view/library${params.size ? `?${params}` : ''}`;
+        }
+        return `#view/${currentView}`;
+      }
+
+      function savedLibraryView() {
+        try { return localStorage.getItem('pf-console-library-view') === 'cards' ? 'cards' : 'table'; }
+        catch (_) { return 'table'; }
+      }
+
+      function setRoute(route, updateHash = true) {
+        activeEndeavor = null;
+        if (route.startsWith('endeavors/')) { currentView = 'endeavor'; activeEndeavor = decodeURIComponent(route.slice(10)); }
+        else if (route === 'library') currentView = savedLibraryView();
+        else if (route === 'maps') currentView = 'maps';
+        else currentView = 'home';
+        render();
+        if (updateHash) history.pushState(null, '', routeHash());
+      }
+
+      function applyHash() {
+        const [rawPath, rawQuery = ''] = location.hash.slice(1).split('?');
+        const path = decodeURIComponent(rawPath);
+        if (path.startsWith('item/')) { openPaper(path.slice(5), false); return; }
+        if (path === 'view/library') {
+          const params = new URLSearchParams(rawQuery);
+          const controls = {endeavor: endeavorFilter, disposition: dispositionFilter, topic: topicFilter, evidence: evidenceFilter, kind: kindFilter, route: routeFilter, stage: stageFilter, access: accessFilter, freshness: freshnessFilter, assessed: assessedFilter, exported: exportedFilter};
+          search.value = params.get('text') || '';
+          Object.entries(controls).forEach(([key, control]) => { control.value = params.get(key) || 'all'; });
+          sortSelect.value = params.get('sort') || 'newest';
+          quickState = null;
+        }
+        if (path.startsWith('view/')) { if (reader.open) closeReader(false); setRoute(path.slice(5), false); return; }
+        if (papers.some(paper => paper.slug === path)) { openPaper(path, false); return; }
+        setRoute('home', false);
+      }
+
+      document.getElementById('stat-total').textContent = papers.length;
+      document.getElementById('stat-attention').textContent = papers.filter(p => statusBucket(p) === 'needs-approver').length;
+      document.getElementById('stat-unclassified').textContent = papers.filter(p => p.themes.includes('Unclassified')).length;
+      document.getElementById('stat-unassessed').textContent = papers.filter(p => !p.assessed).length;
+      topicFilter.innerHTML += (forgeConfig.taxonomy?.topics || []).map(value => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join('');
+      evidenceFilter.innerHTML += (forgeConfig.taxonomy?.evidence_classes || []).map(value => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join('');
+      const activeEndeavors = Object.entries(forgeConfig.portfolio?.endeavors || {}).filter(([, value]) => value.active);
+      document.getElementById('endeavor-nav').innerHTML = activeEndeavors.map(([key, value]) => `<button type="button" data-route="endeavors/${escapeHtml(key)}">${escapeHtml(value.label.replace(' improvement', ''))}</button>`).join('');
+      endeavorFilter.innerHTML += activeEndeavors.map(([key, value]) => `<option value="${escapeHtml(key)}">${escapeHtml(value.label)}</option>`).join('');
+      [...new Set(papers.map(paper => paper.kind))].sort().forEach(value => { kindFilter.innerHTML += `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`; });
+      [...new Set(papers.map(paper => paper.access))].sort().forEach(value => { accessFilter.innerHTML += `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`; });
+
+      const filterControls = [endeavorFilter, dispositionFilter, topicFilter, evidenceFilter, kindFilter, routeFilter, stageFilter, accessFilter, freshnessFilter, assessedFilter, exportedFilter];
+      const syncLibraryHash = () => {
+        if (currentView === 'table' || currentView === 'cards') history.replaceState(null, '', routeHash());
+      };
+      search.addEventListener('input', () => { quickState = null; render(); syncLibraryHash(); });
+      [...filterControls, sortSelect].forEach(control => control.addEventListener('change', () => { quickState = null; render(); syncLibraryHash(); }));
+      document.getElementById('clear-filters').addEventListener('click', () => {
+        search.value = '';
+        filterControls.forEach(control => { control.value = 'all'; });
+        sortSelect.value = 'newest';
+        quickState = null;
+        render();
+        syncLibraryHash();
+        search.focus();
+      });
+      document.getElementById('workspace-nav').addEventListener('click', event => {
+        const button = event.target.closest('[data-route]');
+        if (button) setRoute(button.dataset.route);
+      });
+      document.querySelector('.view-switch').addEventListener('click', event => {
+        const button = event.target.closest('[data-view]');
+        if (button) {
+          currentView = button.dataset.view;
+          try { localStorage.setItem('pf-console-library-view', currentView); } catch (_) { /* convenience only */ }
+          render();
+          syncLibraryHash();
+        }
+      });
+      document.querySelector('.column-toggles').addEventListener('change', event => {
+        const input = event.target.closest('[data-column]');
+        if (!input) return;
+        document.querySelectorAll(`.column-${input.dataset.column}`).forEach(cell => { cell.hidden = !input.checked; });
+      });
+      document.querySelector('main').addEventListener('click', event => {
+        const button = event.target.closest('[data-open]');
+        if (button) openPaper(button.dataset.open);
+        const state = event.target.closest('[data-quick-state]');
+        if (state) { quickState = state.dataset.quickState; setRoute('library'); }
+        const assessed = event.target.closest('[data-assessed]');
+        if (assessed) { assessedFilter.value = assessed.dataset.assessed; setRoute('library'); }
+        const disposition = event.target.closest('[data-disposition]');
+        if (disposition) { dispositionFilter.value = disposition.dataset.disposition; setRoute('library'); }
+      });
+      tableBody.addEventListener('keydown', event => {
+        const row = event.target.closest('[data-open]');
+        if (row && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); openPaper(row.dataset.open); }
+      });
+      docTabs.addEventListener('click', event => {
+        const button = event.target.closest('[data-doc]');
+        if (button) showDocument(button.dataset.doc);
+      });
+      explore.addEventListener('click', event => {
+        const select = event.target.closest('[data-map-select]');
+        if (select) { activeMapSlug = select.dataset.mapSelect; render(); }
+      });
+      document.getElementById('reader-related').addEventListener('click', event => {
+        const button = event.target.closest('[data-related]');
+        if (button) openPaper(button.dataset.related);
+      });
+      document.getElementById('close-reader').addEventListener('click', () => closeReader());
+      reader.addEventListener('click', event => { if (event.target === reader) closeReader(); });
+      reader.addEventListener('cancel', event => { event.preventDefault(); closeReader(); });
+      document.addEventListener('keydown', event => {
+        if (event.key === '/' && document.activeElement !== search && !reader.open) { event.preventDefault(); setRoute('library'); search.focus(); }
+      });
+      window.addEventListener('hashchange', applyHash);
+
+      applyHash();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+A synthetic empirical study. Two prompt formats were compared on 200 classification items; the structured format scored 0.81 accuracy and the free format 0.74. Limitations: one model, one dataset.

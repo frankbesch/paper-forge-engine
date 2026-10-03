@@ -1,0 +1,50 @@
+{
+  "assessment_version": 1,
+  "item_id": "PF-0001",
+  "status": "declined",
+  "assessed_at": "2026-09-04",
+  "assessor": "Alex",
+  "disposition": {
+    "value": null,
+    "rationale": null
+  },
+  "general": {
+    "evidence_quality": {
+      "score": null,
+      "rationale": null
+    },
+    "novelty": {
+      "score": null,
+      "rationale": null
+    },
+    "actionability": {
+      "score": null,
+      "rationale": null
+    },
+    "durability": {
+      "score": null,
+      "rationale": null
+    },
+    "implementation_effort": {
+      "score": null,
+      "rationale": null
+    },
+    "downside_risk": {
+      "score": null,
+      "rationale": null
+    },
+    "urgency": {
+      "score": null,
+      "rationale": null
+    }
+  },
+  "endeavors": {},
+  "safety_flags": [],
+  "freshness": {
+    "as_of": "2026-09-04",
+    "review_by": "2027-03-04"
+  },
+  "application_state": "unassessed",
+  "revision": 1,
+  "history": []
+}
