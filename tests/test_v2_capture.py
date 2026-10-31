@@ -68,6 +68,13 @@ class CaptureV2Tests(unittest.TestCase):
         self.assertIn(metadata["work_type"], table)
         self.assertEqual(metadata["evidence_class"], table[metadata["work_type"]])
 
+    def test_capture_rejects_unmapped_work_type_before_any_write(self):
+        shutil.copytree(ROOT / "config", self.root / "config")
+        with self.assertRaisesRegex(ValueError, "not in the approved evidence-class map"):
+            pf.create_item(self.args(text="new material", work_type="guide"), self.root)
+        self.assertEqual(list((self.root / "papers").iterdir()), [])
+        self.assertFalse((self.root / "ledger").exists())
+
     def test_decline_is_recorded_once_and_recalled_before_capture(self):
         args = self.args(decline="low-value")
         first, appended = pf.decline_capture(args, self.root)

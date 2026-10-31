@@ -502,6 +502,10 @@ def create_item(args: argparse.Namespace, root: Path = ROOT) -> Path:
         raise ValueError("Provide exactly one source path/URL or --text")
     # Validate selection before downloads, duplicate ledgers, or workspace writes.
     route = route_metadata(args.route, args.purpose, args.feynman)
+    # Same gate as classify: an unmapped work_type stops here, before any item folder exists.
+    # A root without the map (bare test fixtures) keeps the old tolerance; validate_v2 still reports it.
+    if (root / "config" / "evidence-class-map.json").is_file():
+        require_mapped_work_type(args.work_type, load_config(root, "evidence-class-map.json").get("work_type_to_evidence_class") or {})
     learning = learning_contract.new_learning(args.feynman, date.today().isoformat())
     today = args.retrieved or date.today().isoformat()
     canonical_url = args.url
@@ -760,6 +764,13 @@ def evidence_class_for(work_type: str | None, root: Path) -> str | None:
     return table.get(work_type)
 
 
+def require_mapped_work_type(work_type: str, table: dict) -> str:
+    """The evidence class for an approved work_type; raises ValueError for a label the map has not ruled."""
+    if work_type not in table:
+        raise ValueError(f"work_type {work_type!r} is not in the approved evidence-class map; rule the map first")
+    return table[work_type]
+
+
 def assess_item(args: argparse.Namespace, root: Path = ROOT) -> tuple[dict, list[str], bool]:
     """Create or revise an assessment. Returns (document, errors, written)."""
     paper_dir, metadata = resolve_item(args.item, root)
@@ -883,10 +894,9 @@ def classify_item(args: argparse.Namespace, root: Path = ROOT) -> tuple[dict, bo
         changes["topics"] = topics
     if args.work_type:
         table = mapping.get("work_type_to_evidence_class") or {}
-        if args.work_type not in table:
-            raise ValueError(f"work_type {args.work_type!r} is not in the approved evidence-class map; rule the map first")
+        evidence_class = require_mapped_work_type(args.work_type, table)
         changes["work_type"] = args.work_type
-        changes["evidence_class"] = table[args.work_type]
+        changes["evidence_class"] = evidence_class
         if "paper_type" in metadata:
             changes["paper_type"] = args.work_type
     if not changes:
